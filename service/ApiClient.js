@@ -1,6 +1,6 @@
 class ApiClient{
 	constructor() {
-		this.baseUrl = 'http://localhost:3000/api/v1';
+		this.baseUrl = 'http://localhost:8000/api/v1';
 		this.defaultHeaders = {
 			'Content-Type': 'application/json',
 			'Accept': 'application/json',
@@ -8,14 +8,16 @@ class ApiClient{
 	}
 	async customFetch( endpoints, options= {}) {
 		try {
-			const url = `${this.baseUrl} ${endpoints}`;
+			const url = `${this.baseUrl}${endpoints}`;
 			const headers = { ...this.defaultHeaders, ...options.headers }
 			const config = {
 				...options, headers,
-				credentials: 'include', 
+				withCredentials: true
 			}
-			console.log(`fetching Url : ${url}`)
-			const response = await fetch(url, config)
+			console.log(`fetching Url : ${url}${config}`)
+
+			const response = await fetch(url, config);
+
 			if (response.ok !== 200) {
 				throw Error('response not come');
 			}
@@ -27,10 +29,15 @@ class ApiClient{
 		}
 	}
 
-	async signup(name, email, password) {
+	async getUser() {
+		return this.customFetch('/users/me', {
+			method: "GET",
+		})
+	}
+	async signup(fname, email, password,username) {
 		return this.customFetch('/users/register', {
 			method: "POST",
-			body: JSON.stringify({ name, email, password })
+			body: JSON.stringify({ fname, email, password ,username})
 		})
 	}
 	async login(email, password) {
@@ -42,6 +49,11 @@ class ApiClient{
 
 	async getProfile() {
 		return this.customFetch('/users/me')
+	}
+	async logout() {
+		return this.customFetch('/users/logout', {
+			method: "POST",
+		})
 	}
 }
 
