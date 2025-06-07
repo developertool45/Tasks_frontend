@@ -1,6 +1,6 @@
 class ApiClient{
 	constructor() {
-		this.baseUrl = 'http://localhost:8000/api/v1';
+		this.baseUrl = 'http://localhost:8000/api/';
 		this.defaultHeaders = {
 			'Content-Type': 'application/json',
 			'Accept': 'application/json',
@@ -12,46 +12,52 @@ class ApiClient{
 			const headers = { ...this.defaultHeaders, ...options.headers }
 			const config = {
 				...options, headers,
-				withCredentials: true
+				credentials: 'include'
 			}
-			console.log(`fetching Url : ${url}${config}`)
+			// console.log(`fetching Url : ${url}`)
 
 			const response = await fetch(url, config);
 
-			if (response.ok !== 200) {
-				throw Error('response not come');
-			}
-			const data = await response.json();
+			if (!response.ok) {
+				// error object
+				const err = await response.json();
+				if (response.status === 400) {
+					throw Error(err.message);
+				}
+					
+			}						
+			const data = await response.json();		
+			
 			return data;
 		} catch (error) {
-			console.log('Error : ', error);
-			throw error;
+			console.log("fetch error", error);
+			throw Error(error.message);
 		}
 	}
 
 	async getUser() {
-		return this.customFetch('/users/me', {
+		return this.customFetch('v1/users/me', {
 			method: "GET",
 		})
 	}
 	async signup(fname, email, password,username) {
-		return this.customFetch('/users/register', {
+		return this.customFetch('v1/users/register', {
 			method: "POST",
 			body: JSON.stringify({ fname, email, password ,username})
 		})
 	}
 	async login(email, password) {
-		return this.customFetch('/users/login', {
+		return this.customFetch('v1/users/login', {
 			method: "POST",
-			body: JSON.stringify({ name, email, password })
+			body: JSON.stringify({  email, password })
 		})
 	}
 
 	async getProfile() {
-		return this.customFetch('/users/me')
+		return this.customFetch('v1/users/me')
 	}
 	async logout() {
-		return this.customFetch('/users/logout', {
+		return this.customFetch('v1/users/logout', {
 			method: "POST",
 		})
 	}

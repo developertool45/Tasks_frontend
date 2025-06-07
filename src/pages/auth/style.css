@@ -1,0 +1,8 @@
+.error{
+	color: red;
+	text-align: center;
+	font-size: 17px;
+}
+.error .redirect{
+	color: #36a2d5;
+}
