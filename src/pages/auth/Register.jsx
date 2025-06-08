@@ -15,6 +15,8 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    if (!fname || !email || !password || !username)
+      return setError("Please enter all fields");
     try {
       const res = await apiClient.signup(fname, email, password, username);
       console.log(res.data);
@@ -32,7 +34,8 @@ const Register = () => {
 
   return (
     <>
-      <form onSubmit={handleRegister}>
+      <form onSubmit={handleRegister} className="form">
+        <h2>Registration Form</h2>
         <input
           type="text"
           value={fname}
@@ -57,16 +60,9 @@ const Register = () => {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
         />
+        {error && <p className="error">{error}</p>}
         <button type="submit">Register</button>
       </form>
-      <div className="error">
-        {error && (
-          <p>
-            {error} <br />{" "}
-            <span className="redirect"> You are redirecting to Login</span>
-          </p>
-        )}
-      </div>
     </>
   );
 };

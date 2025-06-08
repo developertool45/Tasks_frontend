@@ -10,6 +10,7 @@ import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import { AuthProvider } from "./context/Context.jsx";
 import Layout from "./Layout/Layout.jsx";
+import Error from "./pages/Error.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -26,6 +27,7 @@ function App() {
             <Route path="/project/:id" element={<h1> project with id</h1>} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="*" element={<Error />} />
           </Routes>
         </Layout>
       </AuthProvider>

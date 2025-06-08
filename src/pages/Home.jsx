@@ -2,8 +2,10 @@ import React from 'react'
 
 function Home() {
   return (
-	<h1>I'm Home !</h1>
-  )
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default Home
