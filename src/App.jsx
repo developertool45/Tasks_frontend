@@ -17,6 +17,13 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/add-project" element={<h1>add new project</h1>} />
+            <Route path="/all-projects" element={<h1> all projects</h1>} />
+            <Route
+              path="/project-reports"
+              element={<h1> projects reports</h1>}
+            />
+            <Route path="/project/:id" element={<h1> project with id</h1>} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
           </Routes>

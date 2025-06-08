@@ -1,45 +1,62 @@
 import React from 'react'
-import {  NavLink} from 'react-router-dom'
+import { NavLink } from "react-router-dom";
+import "./Layout.css";
 
 export default function Header() {
   return (
     <>
-      <nav className=" bg-blue-500 py-2 h-screen px-4 d-flex flex-col text-white text-xl ">
-        <ul className="flex flex-col align-center gap-1 ">
+      <nav className="navbar-menu">
+        <ul className="nav-items ">
           <li>
-            <NavLink to="/register">
+            <NavLink to="/">
               {({ isActive }) => (
-                <span className={isActive ? "text-yellow-500" : ""}>
-                  Signup
+                <span className={isActive ? "nav-active" : ""}>Home</span>
+              )}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/all-projects">
+              {({ isActive }) => (
+                <span className={isActive ? "nav-active" : ""}>
+                  All Projects
                 </span>
               )}
             </NavLink>
           </li>
           <li>
-            <NavLink to="/login">
+            <NavLink to="/add-project">
               {({ isActive }) => (
-                <span className={isActive ? "text-yellow-500" : ""}>Login</span>
+                <span className={isActive ? "nav-active" : ""}>
+                  Add New Project
+                </span>
               )}
             </NavLink>
           </li>
           <li>
-            <NavLink to="/home">
+            <NavLink to="/project-reports">
               {({ isActive }) => (
-                <span className={isActive ? "text-yellow-500" : ""}>Home</span>
+                <span className={isActive ? "nav-active" : ""}>
+                  Project Reports
+                </span>
               )}
             </NavLink>
           </li>
         </ul>
 
-        <ul>
+        <ul className="nav-items ">
           <li>
-            <NavLink to="/listings">Listings</NavLink>
+            <NavLink to="/login">
+              {({ isActive }) => (
+                <span className={isActive ? "nav-active" : ""}>LogIn</span>
+              )}
+            </NavLink>
           </li>
           <li>
-            <NavLink to="/listings">Listings</NavLink>
-          </li>
-          <li>
-            <NavLink to="/listings">Listings</NavLink>
+            <NavLink to="/register">
+              {({ isActive }) => (
+                <span className={isActive ? "nav-active" : ""}>SignUp</span>
+              )}
+            </NavLink>
           </li>
         </ul>
       </nav>

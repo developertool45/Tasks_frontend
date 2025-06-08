@@ -1,13 +1,15 @@
 import React from "react";
 import Footer from "./Footer";
 import Header from "./Header";
+import { Outlet } from "react-router";
 export default function Layout({ children }) {
   return (
-    <div className="flex">
-      <div className="w-[10%] h-screen">
+    <div className="container mx-auto">
+      <div>
         <Header />
+        <main className="min-h-[calc(80vh)] m-4">{children}</main>
+        <Footer />
       </div>
-      <main className="w-[90%] h-screen bg-gray-100">{children}</main>
     </div>
   );
 }
