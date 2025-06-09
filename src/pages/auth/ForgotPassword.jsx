@@ -1,49 +1,45 @@
-import react, { use, useState } from "react";
+import react, {  useState } from "react";
 import apiClient from "../../../service/ApiClient";
 import { useAuth } from "../../context/Context";
 import "./style.css";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { user, setUser } = useAuth();
-  const [error, setError] = useState(false);
+const ForgotPassword = () => {
+	const [email, setEmail] = useState("");  
+	const [error, setError] = useState(false);
+	const [successMsg, setSuccessMsg] = useState('');
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!email || !password) return setError("Please enter email and password");
+    if (!email ) return setError("Please enter an email ");
     try {
-      const res = await apiClient.login(email, password);
-      if (res.statusCode !== 200) {
-        console.log(res.data);
-        return setError(res.data.data);
+		const res = await apiClient.forgotPassword(email);
+		console.log(res);
+		
+      if (res.statusCode === 200) {
+        return setSuccessMsg(res.data);
       }
-      if (res.success) setUser(res.data.user);
+    
     } catch (error) {
-      alert(error);
+      console.log(error);
       setError(error.message);
     }
   };
 
   return (
     <form onSubmit={handleLogin} className="form">
-      <h2>Login Form</h2>
+      <h2>Forgot password </h2>
       <input
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email"
       />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
       <h4 className="error">{error ? error : " "}</h4>
-      <button type="submit">Login</button>
+      <h4 className="sucess">{successMsg ? successMsg : " "}</h4>
+
+      <button type="submit">{successMsg ? "resend" : "Reset password"}</button>
       <div className="mt-4 text-sm text-center">
         <div>
           <p>
@@ -55,9 +51,9 @@ const Login = () => {
         </div>
         <div>
           <p>
-            Forgot Password?{" "}
-            <Link to="/forgot-password" className="redirect">
-              Reset Password
+            Already have an account?{" "}
+            <Link to="/login" className="redirect">
+              Login
             </Link>
           </p>
         </div>
@@ -66,4 +62,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;

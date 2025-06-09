@@ -49,10 +49,39 @@ class ApiClient{
 	async login(email, password) {
 		return this.customFetch('v1/users/login', {
 			method: "POST",
-			body: JSON.stringify({  email, password })
+			body: JSON.stringify({email, password})
 		})
 	}
-
+	async verifyEmailResend(email) {
+		return this.customFetch('v1/users/verify-email-resend', {
+			method: "POST",
+			body: JSON.stringify({email})
+		})
+	}
+	async verifyUser(token) {
+		return this.customFetch('v1/users/verify-email', {
+			method: "POST",
+			body: JSON.stringify({token})
+		})
+	}
+	async forgotPassword(email) {
+		return this.customFetch('v1/users/forgot-password', {
+			method: "POST",
+			body: JSON.stringify({email})
+		})
+	}
+	async resetPassword(token, password) {
+		return this.customFetch('v1/users/reset-password', {
+			method: "POST",
+			body: JSON.stringify({token, password})
+		})
+	}
+	async verifyEmail(token) {
+		return this.customFetch('v1/users/verify-email', {
+			method: "POST",
+			body: JSON.stringify({token})
+		})
+	}
 	async getProfile() {
 		return this.customFetch('v1/users/me')
 	}

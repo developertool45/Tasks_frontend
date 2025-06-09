@@ -7,8 +7,8 @@ export default function Layout({ children }) {
     <div className="container mx-auto">
       <div>
         <Header />
-        <main className="min-h-[calc(80vh)] m-4">{children}</main>
-        <Footer />
+        <main className="min-h-[50vh] m-4">{children}</main>
+        {/* <Footer /> */}
       </div>
     </div>
   );

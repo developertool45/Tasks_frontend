@@ -11,6 +11,10 @@ import Login from "./pages/auth/Login";
 import { AuthProvider } from "./context/Context.jsx";
 import Layout from "./Layout/Layout.jsx";
 import Error from "./pages/Error.jsx";
+import EmailVerification from "./pages/auth/EmailVerification.jsx";
+import ForgotPassword from "./pages/auth/ForgotPassword.jsx";
+import PasswordReset from "./pages/auth/PasswordReset.jsx";
+import EmailVerified from "./pages/auth/EmailVerified.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -27,6 +31,10 @@ function App() {
             <Route path="/project/:id" element={<h1> project with id</h1>} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/email-verification" element={<EmailVerification />} />
+            <Route path="/email-verified" element={<EmailVerified />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<PasswordReset />} />
             <Route path="*" element={<Error />} />
           </Routes>
         </Layout>

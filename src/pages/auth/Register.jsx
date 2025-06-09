@@ -3,6 +3,7 @@ import {useAuth} from "../../context/Context";
 import apiClient from './../../../service/ApiClient';
 import "./style.css";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const [fname, setName] = useState("name");
@@ -16,7 +17,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     if (!fname || !email || !password || !username)
-      return setError("Please enter all fields");
+      return setError("all fields are required !");
     try {
       const res = await apiClient.signup(fname, email, password, username);
       console.log(res.data);
@@ -62,6 +63,25 @@ const Register = () => {
         />
         {error && <p className="error">{error}</p>}
         <button type="submit">Register</button>
+
+        <div className="mt-4 text-sm text-center">
+          <div>
+            <p>
+              Already have an account :{" "}
+              <Link to="/login" className="redirect">
+                Login
+              </Link>
+            </p>
+          </div>
+          <div>
+            <p>
+              Forgot Password? :{" "}
+              <Link to="/forgot-password" className="redirect">
+                Reset Password
+              </Link>
+            </p>
+          </div>
+        </div>
       </form>
     </>
   );

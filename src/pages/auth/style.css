@@ -1,7 +1,7 @@
 .error{
 	color: red;
 	text-align: center;
-	font-size: 17px;
+	font-size: 14px;
 }
 .error .redirect{
 	color: #36a2d5;
@@ -30,7 +30,7 @@
 	border: none;
 	outline: none;
 	background-color: #fff;
-	font-size: 1.2rem;
+	font-size: 1rem;
 	margin-bottom: 10px;
 }
 .form button{
@@ -49,4 +49,20 @@
 }
 .form button:hover{
 	background-color: #2e8bb5;
+}
+.sucess{
+	color: green;
+	text-align: center;
+	font-size: 14px;
+}
+.redirect{
+	color: #ef5a24;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+.redirect:hover{
+	text-decoration: underline;
+	transition: all 0.3s ease;
 }
