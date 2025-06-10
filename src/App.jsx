@@ -32,7 +32,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/email-verification" element={<EmailVerification />} />
-            <Route path="/email-verified" element={<EmailVerified />} />
+            <Route path="/email-verified/" element={<EmailVerified />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<PasswordReset />} />
             <Route path="*" element={<Error />} />

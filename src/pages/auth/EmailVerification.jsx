@@ -16,10 +16,10 @@ const EmailVerification = () => {
     if (!email) return setError("Please enter your email ");
     try {
       const res = await apiClient.verifyEmailResend(email);
-		if (res.ok) {
-		console.log(res.data);
-		return setSuccessMsg(res.data.message);
-	  }
+    
+      if (res.success) {
+        return setSuccessMsg(res.data.message);
+      }
       
     } catch (error) {
       alert(error);

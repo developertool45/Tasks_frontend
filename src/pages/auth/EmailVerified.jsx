@@ -2,30 +2,33 @@ import react, { useState } from "react";
 import apiClient from "../../../service/ApiClient";
 import { useAuth } from "../../context/Context";
 import "./style.css";
-import { Link, useParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const EmailVerified = () => {
- const [email, setEmail] = useState("");
-  const { token } = useParams();  
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
   const { user, setUser } = useAuth();
   const [error, setError] = useState(false);
-const [successMsg, setSuccessMsg] = useState("");
-	
+  const [successMsg, setSuccessMsg] = useState("");
 
-	const handleLogin = async (e) => {
-	  console.log("token", token);
-	  
+  console.log("token", token);
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if(!token) return setError("Please enter a valid token");
+
+    if (!token) return setError("Please enter a valid token");
+
     try {
       const res = await apiClient.verifyUser(token);
-      if (res.ok) {
-        console.log(res);
-        return setSuccessMsg(res.data);
+      console.log(res);
+
+      if (res.success) {
+        setSuccessMsg(res.message || res.data.username);
+      } else {
+        setError(res.message || "Invalid or expired token");
       }
     } catch (error) {
       console.log(error);
-      setError(error.message);
+      setError(error.message || "Something went wrong");
     }
   };
 
@@ -39,7 +42,7 @@ const [successMsg, setSuccessMsg] = useState("");
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
       /> */}
-     
+
       <h4 className="error">{error ? error : " "}</h4>
       <button type="submit">{successMsg ? "verified" : "verify"}</button>
       <div className="mt-4 text-sm text-center">
@@ -54,8 +57,8 @@ const [successMsg, setSuccessMsg] = useState("");
         <div>
           <p>
             Don't have an account{" "}
-            <Link to="/register" className="redirect">
-              Register now
+            <Link to="/email-verification" className="redirect">
+              resend email
             </Link>
           </p>
         </div>

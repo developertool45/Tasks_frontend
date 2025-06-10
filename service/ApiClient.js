@@ -59,9 +59,8 @@ class ApiClient{
 		})
 	}
 	async verifyUser(token) {
-		return this.customFetch('v1/users/verify-email', {
-			method: "POST",
-			body: JSON.stringify({token})
+		return this.customFetch(`v1/users/verify-email/?token=${token}`, {
+			method: "get",			
 		})
 	}
 	async forgotPassword(email) {
