@@ -82,7 +82,9 @@ class ApiClient{
 		})
 	}
 	async getProfile() {
-		return this.customFetch('v1/users/me')
+		return this.customFetch('v1/users/get-profile', {
+			method: "post",
+		})
 	}
 	async logout() {
 		return this.customFetch('v1/users/logout', {

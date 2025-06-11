@@ -10,20 +10,28 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const { user, setUser } = useAuth();
   const [error, setError] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
+
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(false);
+    setSuccessMsg("");
     if (!email || !password) return setError("Please enter email and password");
     try {
       const res = await apiClient.login(email, password);
-      if (res.statusCode !== 200) {
-        console.log(res.data);
-        return setError(res.data.data);
+      if (res.success) {
+        setSuccessMsg(res.message);
+        setUser(res.data);
+        navigate("/profile");
+        console.log(res.message);
       }
-      if (res.success) setUser(res.data.user);
     } catch (error) {
-      alert(error);
+      console.log(error);
       setError(error.message);
+      setUser(null);
+      setSuccessMsg("");
     }
   };
 
@@ -42,8 +50,12 @@ const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
       />
-      <h4 className="error">{error ? error : " "}</h4>
+      <h4 className="error">
+        {error ? error : <span className="sucess">{successMsg}</span>}
+      </h4>
+      {/* <h4 className="sucess">{successMsg ? successMsg : " "}</h4> */}
       <button type="submit">Login</button>
+
       <div className="mt-4 text-sm text-center">
         <div>
           <p>

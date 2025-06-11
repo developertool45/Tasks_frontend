@@ -17,9 +17,9 @@ const ForgotPassword = () => {
 		const res = await apiClient.forgotPassword(email);
 		console.log(res);
 		
-      if (res.statusCode === 200) {
-        return setSuccessMsg(res.data);
-      }
+    if (res.success) {
+      return setSuccessMsg(res.data);
+    }
     
     } catch (error) {
       console.log(error);

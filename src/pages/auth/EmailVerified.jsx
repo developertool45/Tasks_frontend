@@ -34,7 +34,9 @@ const EmailVerified = () => {
 
   return (
     <form onSubmit={handleLogin} className="form">
-      <h2>User Verification</h2>
+      <h2 className={successMsg ? "sucess" : ""}>
+        {successMsg ? "Email Verified" : "Email Verification"}
+      </h2>
 
       {/* <input
         type="password"
