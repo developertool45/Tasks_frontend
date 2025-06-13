@@ -36,7 +36,7 @@ class ApiClient{
 	}
 
 	async getUser() {
-		return this.customFetch('v1/users/me', {
+		return this.customFetch('v1/users/get-profile', {
 			method: "GET",
 		})
 	}
@@ -88,7 +88,18 @@ class ApiClient{
 	}
 	async logout() {
 		return this.customFetch('v1/users/logout', {
-			method: "POST",
+			method: "get",
+		})
+	}
+	async getAllProjects() {
+		return this.customFetch('v1/projects/all-projects', {
+			method: "get",
+		})
+	}
+	async createProject(name, description) {
+		return this.customFetch('v1/projects/new-project', {
+			method: "post",
+			body: JSON.stringify({name, description})
 		})
 	}
 }

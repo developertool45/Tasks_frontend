@@ -1,4 +1,4 @@
-import react, { use, useState } from "react";
+import react, { useState } from "react";
 import apiClient from "../../../service/ApiClient";
 import { useAuth } from "../../context/Context";
 import "./style.css";
@@ -24,8 +24,13 @@ const Login = () => {
       if (res.success) {
         setSuccessMsg(res.message);
         setUser(res.data);
-        navigate("/profile");
+        // Save in localStorage
+        console.log(res);
+
+        localStorage.setItem("userId", JSON.stringify(res.data.id));
+        localStorage.setItem("token", JSON.stringify(res.data.token));
         console.log(res.message);
+        navigate("/profile");
       }
     } catch (error) {
       console.log(error);

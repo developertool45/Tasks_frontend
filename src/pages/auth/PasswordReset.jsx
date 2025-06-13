@@ -4,32 +4,36 @@ import { useAuth } from "../../context/Context";
 import "./style.css";
 import { Link, useSearchParams } from "react-router-dom";
 
+
 const PasswordReset = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { user, setUser } = useAuth();
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState("");
-
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(null);
+    setSuccessMsg("");
     if (!password || !confirmPassword)
       return setError("all fields are required !");
     if (password !== confirmPassword) return setError("passwords do not match");
     try {
       const res = await apiClient.resetPassword(token, password);
-      if (res.statusCode !== 200) {
+      if (res.success) {
         console.log(res);
-        return setSuccessMsg(res.data);
+        console.log(res.message);
+
+        return setSuccessMsg(res.message);
       }
     } catch (error) {
       console.log(error);
       setError(error.message);
     }
   };
-
+  console.log(successMsg);
   return (
     <form onSubmit={handleLogin} className="form">
       <h2>Reset Password</h2>
@@ -46,8 +50,20 @@ const PasswordReset = () => {
         onChange={(e) => setConfirmPassword(e.target.value)}
         placeholder="Confirm Password"
       />
-      <h4 className="error">{error ? error : " "}</h4>
-      <button type="submit">reset password</button>
+      <h4 className="error">
+        {successMsg ? (
+          <span className="sucess">{successMsg}</span>
+        ) : error ? (
+          error
+        ) : (
+          ""
+        )}
+        {/* {error ? error : <span className="sucess">{successMsg} </span>} */}
+      </h4>
+
+      <button type="submit">
+        {successMsg ? <Link to="/login">Please Login</Link> : "Reset Password"}
+      </button>
       <div className="mt-4 text-sm text-center">
         <div>
           <p>

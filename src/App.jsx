@@ -16,6 +16,14 @@ import ForgotPassword from "./pages/auth/ForgotPassword.jsx";
 import PasswordReset from "./pages/auth/PasswordReset.jsx";
 import EmailVerified from "./pages/auth/EmailVerified.jsx";
 import Profile from "./pages/auth/Profile.jsx";
+// protected route
+import ProtectedRoute from "./components/PrivateRoute.jsx";
+import PublicRoute from "./components/PublicRoute.jsx";
+
+// project route
+import ProjectAdmin from "./pages/Projects/ProjectAdmin.jsx";
+import AllProjects from "./pages/Projects/AllProjects.jsx";
+import CreateProject from "./pages/Projects/CreateProject.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -23,22 +31,27 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/add-project" element={<h1>add new project</h1>} />
-            <Route path="/all-projects" element={<h1> all projects</h1>} />
-            <Route
-              path="/project-reports"
-              element={<h1> projects reports</h1>}
-            />
-            <Route path="/project/:id" element={<h1> project with id</h1>} />
             // auth route
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/email-verification" element={<EmailVerification />} />
             <Route path="/email-verified/" element={<EmailVerified />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<PasswordReset />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/reset-password/" element={<PasswordReset />} />
+            // error
             <Route path="*" element={<Error />} />
+
+            // Login/Register route
+            <Route element={<PublicRoute />}>
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+            </Route>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/profile" element={<Profile />} />
+              // project route
+              <Route path="/all-projects" element={<AllProjects />} />
+              <Route element={<ProjectAdmin />}>
+                <Route path="/create-project" element={<CreateProject />} />
+              </Route>
+            </Route>
           </Routes>
         </Layout>
       </AuthProvider>

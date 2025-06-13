@@ -1,11 +1,10 @@
-import { Navigate } from "react-router-dom";
-import { AuthContextProvider } from "../context/Context.js";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../context/Context";
 
-const PublicRoute = ({ children }) => {
-  const { user, loading } = useAuth();
-  if (loading) return <p>Loading...</p>;
-  if (user) return <Navigate to="/dashboard" />;
-  return children;
+const PublicRoute = () => {
+  const { user } = useAuth();
+
+  return user ? <Navigate to="/" replace /> : <Outlet />;
 };
 
 export default PublicRoute;
