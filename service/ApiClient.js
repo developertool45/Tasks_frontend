@@ -102,6 +102,51 @@ class ApiClient{
 			body: JSON.stringify({name, description})
 		})
 	}
+	async getProject(id) {
+		return this.customFetch(`v1/projects/get-project/${id}`, {
+			method: "get",
+		})
+	}
+	async updateProject(id, name, description, status) {
+		return this.customFetch(`v1/projects/update-project/${id}`, {
+			method: "post",
+			body: JSON.stringify({name, description, status})
+		})
+	}
+	async deleteProject(id) {
+		return this.customFetch(`v1/projects/delete-project/${id}`, {
+			method: "post",
+		})
+	}
+	async addMembertoProject(id, email) {
+		return this.customFetch(`v1/projects/add-project-member/${id}`, {
+			method: "post",
+			body: JSON.stringify({email})
+		})
+	}
+	async getProjectMembers(id) {
+		return this.customFetch(`v1/projects/project-members/${id}`, {
+			method: "post",
+		})
+	}
+	async updateProjectMembers(id, email) {
+		return this.customFetch(`v1/projects/update-project-members/${id}`, {
+			method: "post",
+			body: JSON.stringify({email})
+		})
+	}
+	async updateMemberRole(projectId, memberId, role) {
+		return this.customFetch(`v1/projects/update-member-role/${projectId}/${memberId}`, {	
+			method: "post",
+			body: JSON.stringify({role})
+		})
+	}
+	async deleteMember(id, memberId, email) {
+		return this.customFetch(`v1/projects/delete-member/${id}/${memberId}`, {
+			method: "post",
+			body: JSON.stringify({email})
+		})
+	}
 }
 
 const apiClient = new ApiClient();

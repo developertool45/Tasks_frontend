@@ -9,5 +9,5 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	font-family: var(--font-primary), var(--font-secondary),'Segoe UI', sans-serif;
+	font-family:  var(--font-secondary),var(--font-primary),'Segoe UI', sans-serif;
 }

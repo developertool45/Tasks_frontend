@@ -6,10 +6,10 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
 const Register = () => {
-  const [fname, setName] = useState("name");
-  const [email, setEmail] = useState("name@gmail.com");
-  const [password, setPassword] = useState("name@12345");
-  const [username, setUsername] = useState("name123");
+  const [fname, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const { user, setUser } = useAuth();
   const [error, setError] = useState(null);
   const navigate = useNavigate();

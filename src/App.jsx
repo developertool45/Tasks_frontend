@@ -24,6 +24,11 @@ import PublicRoute from "./components/PublicRoute.jsx";
 import ProjectAdmin from "./pages/Projects/ProjectAdmin.jsx";
 import AllProjects from "./pages/Projects/AllProjects.jsx";
 import CreateProject from "./pages/Projects/CreateProject.jsx";
+import ProjectView from "./pages/Projects/ProjectView.jsx";
+import EditProject from "./pages/Projects/EditProject.jsx";
+import AddMemberToProject from "./pages/Projects/AddMemberToProject.jsx";
+import UpdateProjectMember from "./pages/Projects/UpdateProjectMember.jsx";
+
 function App() {
   return (
     <BrowserRouter>
@@ -38,7 +43,6 @@ function App() {
             <Route path="/reset-password/" element={<PasswordReset />} />
             // error
             <Route path="*" element={<Error />} />
-
             // Login/Register route
             <Route element={<PublicRoute />}>
               <Route path="/register" element={<Register />} />
@@ -50,6 +54,19 @@ function App() {
               <Route path="/all-projects" element={<AllProjects />} />
               <Route element={<ProjectAdmin />}>
                 <Route path="/create-project" element={<CreateProject />} />
+                <Route path="/projects/:projectId" element={<ProjectView />} />
+                <Route
+                  path="/projects/:projectId/add-member"
+                  element={<AddMemberToProject />}
+                />
+                <Route
+                  path="/projects/:projectId/members"
+                  element={<UpdateProjectMember />}
+                />
+                <Route
+                  path="/projects/:projectId/edit"
+                  element={<EditProject />}
+                />
               </Route>
             </Route>
           </Routes>

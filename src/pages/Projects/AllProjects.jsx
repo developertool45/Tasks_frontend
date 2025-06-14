@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import apiClient from "../../../service/ApiClient";
 import { Link } from "react-router";
-
+import { useNavigate, useParams } from "react-router-dom";
 
 const allProjects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Replace with your API URL
@@ -21,6 +23,20 @@ const allProjects = () => {
         setLoading(false);
       });
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      const res = await apiClient.deleteProject(id);
+
+      if (!res.success) return console.log(res.message);
+
+      setProjects((prevProjects) =>
+        prevProjects.filter((project) => project._id !== id)
+      );
+    } catch (error) {
+      console.error("Failed to delete project", error);
+    }
+  };
 
   if (loading) {
     return (
@@ -44,18 +60,41 @@ const allProjects = () => {
         </div>
       ) : (
         <div className="grid gap-4">
-          {projects.map((project) => (
+          {projects.map((project, index) => (
             <div
               key={project._id}
-              className="border rounded-xl shadow-sm p-4 hover:shadow-md transition bg-white"
+              className=" flex justify-between border rounded-xl shadow-sm p-4 hover:shadow-md transition bg-white"
             >
-              <h3 className="text-xl font-semibold text-blue-700">
-                {project.name}
-              </h3>
-              <p className="text-gray-600 mt-1">{project.description}</p>
-              <div className="text-sm text-gray-400 mt-2">
-                Created by: {project.createdBy?.fname || "Unknown"} •{" "}
-                {new Date(project.createdAt).toLocaleString()}
+              <div className="w-3/4">
+                <h3 className="text-xl font-semibold text-blue-700">
+                  <span>{index + 1}. </span>
+                  {project.name}
+                </h3>
+                <p className="text-gray-600 mt-1">{project.description}</p>
+                <div className="text-sm text-gray-400 mt-2">
+                  Created by: {project.createdBy?.fname || "Unknown"} •{" "}
+                  {new Date(project.createdAt).toLocaleString()}
+                </div>
+              </div>
+              <div className=" w-1/4 flex flex-col items-end">
+                <Link
+                  to={`/projects/${project._id}`}
+                  className=" bg-blue-100 px-2 py-1 text-blue-600 hover:bg-blue-200 hover:underline"
+                >
+                  View
+                </Link>
+                <Link
+                  to={`/projects/${project._id}/edit`}
+                  className="text-blue-600 hover:underline mt-2 bg"
+                >
+                  Edit
+                </Link>
+                <Link
+                  onClick={() => handleDelete(project._id)}
+                  className="text-red-600 hover:underline ml-2"
+                >
+                  Delete
+                </Link>
               </div>
             </div>
           ))}
