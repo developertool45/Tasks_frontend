@@ -11,8 +11,9 @@ export const AuthProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         const user = await apiClient.getUser();
+        if (user.statusCode !== 200) return;
+        console.log("context", user);
         setUser(user.data);
-        console.log(user.data);
       } catch (error) {
         setUser(null);
       } finally {
@@ -20,7 +21,7 @@ export const AuthProvider = ({ children }) => {
       }
     };
     fetchUser();
-  }, [setUser]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, setUser, loading }}>

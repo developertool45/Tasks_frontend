@@ -28,37 +28,54 @@ const ForgotPassword = () => {
   };
 
   return (
-    <form onSubmit={handleLogin} className="form">
-      <h2>Forgot password </h2>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <h4 className="error">{error ? error : " "}</h4>
-      <h4 className="sucess">{successMsg ? successMsg : " "}</h4>
+    <div className="mt-10 flex items-center justify-center px-4">
+      <form
+        onSubmit={handleLogin}
+        className="w-full max-w-md bg-white p-6 rounded-xl shadow-md border"
+      >
+        <h2 className="text-xl font-bold text-center text-blue-700 mb-6">
+          Forgot Password
+        </h2>
 
-      <button type="submit">{successMsg ? "resend" : "Reset password"}</button>
-      <div className="mt-4 text-sm text-center">
-        <div>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="w-full p-2 mb-3 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        />
+
+        <h4 className="text-sm text-red-600 mb-1 text-center">
+          {error ? error : ""}
+        </h4>
+        <h4 className="text-sm text-green-600 mb-4 text-center">
+          {successMsg ? successMsg : ""}
+        </h4>
+
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+        >
+          {successMsg ? "Resend" : "Reset Password"}
+        </button>
+
+        <div className="mt-6 text-sm text-center text-gray-600 space-y-2">
           <p>
             Don't have an account?{" "}
-            <Link to="/register" className="redirect">
+            <Link to="/register" className="text-blue-600 hover:underline">
               Register
             </Link>
           </p>
-        </div>
-        <div>
           <p>
             Already have an account?{" "}
-            <Link to="/login" className="redirect">
+            <Link to="/login" className="text-blue-600 hover:underline">
               Login
             </Link>
           </p>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 

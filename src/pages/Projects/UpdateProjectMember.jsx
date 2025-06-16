@@ -6,48 +6,54 @@ const UpdateProjectMember = () => {
   const { projectId: id } = useParams(); // project ID
   const [members, setMembers] = useState([]);
   const [message, setMessage] = useState({ text: "", type: "" });
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-		  const res = await apiClient.getProjectMembers(id);
-		  if (!res.success) return setMessage({ text: res.message, type: "error" });
-		  		  
+        const res = await apiClient.getProjectMembers(id);
+        if (!res.success)
+          return setMessage({ text: res.message, type: "error" });
+        console.log("fetch members", res);
+
         setMembers(res.data);
       } catch (err) {
         setMessage({ text: "Failed to load members", type: "error" });
       }
     };
     fetchMembers();
-  }, [id]);
+  }, [id, refresh]);
 
-	const handleRoleChange = async (id, memberId, role) => {
-	  console.log("projectId",id, "memberId", memberId, "role",role);
-	  
+  const handleRoleChange = async (id, memberId, role) => {
+    setMessage({ text: "", type: "" });
     try {
       const res = await apiClient.updateMemberRole(id, memberId, role);
-	  if (!res.success) return setMessage({ text: res.message, type: "error" });
+      if (!res.success) return setMessage({ text: res.message, type: "error" });
 
       // Optimistic UI update
       setMembers((prev) =>
         prev.map((m) => (m._id === memberId ? { ...m, role } : m))
       );
 
+      setRefresh((prev) => !prev);
       setMessage({ text: "Member updated successfully!", type: "success" });
     } catch (err) {
       setMessage({ text: "Update failed!", type: "error" });
     }
-	};
-	const removeUser = async (id, memberId, email) => {
-		try {
-			const res = await apiClient.deleteMember(id, memberId, email);
-			if (!res.success) return setMessage({ text: res.message, type: "error" });
-			setMembers((prev) => prev.filter((m) => m._id !== memberId));
-			setMessage({ text: "Member removed successfully!", type: "success" });
-		} catch (err) {
-			setMessage({ text: "Failed to remove member", type: "error" });
-		}
-	};
+  };
+  const removeUser = async (id, memberId, email) => {
+    try {
+      const res = await apiClient.deleteMember(id, memberId, email);
+      console.log("deleteMember", res);
+
+      if (!res.success) return setMessage({ text: res.message, type: "error" });
+      setRefresh((prev) => !prev);
+      setMembers((prev) => prev.filter((m) => m._id !== memberId));
+      setMessage({ text: "Member removed successfully!", type: "success" });
+    } catch (err) {
+      setMessage({ text: "Failed to remove member", type: "error" });
+    }
+  };
 
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white shadow rounded">
@@ -74,12 +80,14 @@ const UpdateProjectMember = () => {
             <div>
               <p className="font-semibold text-gray-800">{member.user.fname}</p>
               <p className="text-sm text-gray-500">{member.user.email}</p>
-              <p className="text-sm text-gray-500">{member.user.role}</p>
+              <p className="text-sm text-gray-500">{member.role}</p>
             </div>
 
             <select
-              value={member.user.role}
-              onChange={(e) => handleRoleChange(id, member._id, e.target.value)}
+              value={member.role}
+              onChange={(e) =>
+                handleRoleChange(id, member.user._id, e.target.value)
+              }
               className="p-2 border rounded"
             >
               <option value="project_admin">Project Admin</option>
@@ -87,7 +95,7 @@ const UpdateProjectMember = () => {
             </select>
 
             <button
-              onClick={() => removeUser(id, member._id, member.user.email)}
+              onClick={() => removeUser(id, member.user._id, member.user.email)}
               className="px-4 py-2 bg-red-300 rounded"
             >
               {" "}

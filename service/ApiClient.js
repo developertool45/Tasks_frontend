@@ -37,7 +37,7 @@ class ApiClient{
 
 	async getUser() {
 		return this.customFetch('v1/users/get-profile', {
-			method: "GET",
+			method: "POST",
 		})
 	}
 	async signup(fname, email, password,username) {
@@ -147,6 +147,19 @@ class ApiClient{
 			body: JSON.stringify({email})
 		})
 	}
+	// tasks endpoints
+	async getProjectTasks(projectId) {
+		return this.customFetch(`v1/tasks/project-tasks/${projectId}`, {
+			method: "get",
+		})
+	}
+	async createTask({ title, description, assignedTo, status, projectId }) {
+		return this.customFetch(`v1/tasks/create-task/${projectId}`, {
+			method: "post",
+			body: JSON.stringify({title, description, assignedTo, status})
+		})
+	}
+
 }
 
 const apiClient = new ApiClient();

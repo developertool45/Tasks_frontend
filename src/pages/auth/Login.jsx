@@ -30,7 +30,7 @@ const Login = () => {
         localStorage.setItem("userId", JSON.stringify(res.data.id));
         localStorage.setItem("token", JSON.stringify(res.data.token));
         console.log(res.message);
-        navigate("/profile");
+        navigate("/all-projects");
       }
     } catch (error) {
       console.log(error);
@@ -41,45 +41,61 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleLogin} className="form">
-      <h2>Login Form</h2>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <h4 className="error">
-        {error ? error : <span className="sucess">{successMsg}</span>}
-      </h4>
-      {/* <h4 className="sucess">{successMsg ? successMsg : " "}</h4> */}
-      <button type="submit">Login</button>
+    <div className="w-full max-w-sm mx-auto mt-16 p-6 bg-white rounded-xl shadow-md border">
+      <form onSubmit={handleLogin} className="space-y-4">
+        <h2 className="text-xl font-bold text-gray-800 text-center">
+          Login Form
+        </h2>
 
-      <div className="mt-4 text-sm text-center">
-        <div>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        />
+
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        />
+
+        {error && <p className="text-sm text-red-500">{error}</p>}
+        {!error && successMsg && (
+          <p className="text-sm text-green-500">{successMsg}</p>
+        )}
+
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+        >
+          Login
+        </button>
+
+        <div className="pt-4 text-sm text-center text-gray-600 space-y-2">
           <p>
             Don't have an account?{" "}
-            <Link to="/register" className="redirect">
+            <Link to="/register" className="text-blue-600 hover:underline">
               Register
             </Link>
           </p>
-        </div>
-        <div>
           <p>
             Forgot Password?{" "}
-            <Link to="/forgot-password" className="redirect">
+            <Link
+              to="/forgot-password"
+              className="text-blue-600 hover:underline"
+            >
               Reset Password
             </Link>
           </p>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 

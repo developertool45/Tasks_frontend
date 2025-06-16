@@ -51,24 +51,29 @@ export default function Header() {
               )}
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/create-project">
-              {({ isActive }) => (
-                <span className={isActive ? "nav-active" : ""}>
-                  Add New Project
-                </span>
-              )}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/project-reports">
-              {({ isActive }) => (
-                <span className={isActive ? "nav-active" : ""}>
-                  Project Reports
-                </span>
-              )}
-            </NavLink>
-          </li>
+          {user && (
+            <>
+              {/* <li>
+                <NavLink to="/create-project">
+                  {({ isActive }) => (
+                    <span className={isActive ? "nav-active" : ""}>
+                      Add New Project
+                    </span>
+                  )}
+                </NavLink>
+              </li> */}
+
+              <li>
+                <NavLink to="/project-reports">
+                  {({ isActive }) => (
+                    <span className={isActive ? "nav-active" : ""}>
+                      Project Reports
+                    </span>
+                  )}
+                </NavLink>
+              </li>
+            </>
+          )}
         </ul>
 
         <ul className="nav-items ">

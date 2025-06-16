@@ -3,76 +3,94 @@ import apiClient from '../../../service/ApiClient';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/Context';
 import "../auth/style.css";
-function CreateProject() {
-	const [name, setName] = useState("");
-	const [description, setDescription] = useState("");
-	const [error, setError] = useState(null);
-	const [loading, setLoading] = useState(false);
-	const [successMsg, setSuccessMsg] = useState("");
+function CreateProject({ setRefresh }) {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
 
-	const handleProject = async (e) => {
-		e.preventDefault();
-		setError(null);
-		setSuccessMsg("");
-		if (!name || !description) return setError("all fields are required !");
-		try {
-			const res = await apiClient.createProject(name, description);
-			if (res.success) {
-				console.log(res);
-				console.log(res.message);
-				return setSuccessMsg(res.message);
-			}
-		
-		} catch (error) {
-			console.log(error);
-			setError(error.message);
-		}
+  const { user } = useAuth();
 
-	}
+  const handleProject = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setSuccessMsg("");
+    if (!name || !description) return setError("all fields are required !");
+    try {
+      const res = await apiClient.createProject(name, description);
+      if (res.success) {
+        console.log(res);
+        console.log(res.message);
+        setRefresh((prev) => !prev);
+        return setSuccessMsg(res.message);
+      }
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+    }
+  };
 
   return (
-    <>      
-      <form onSubmit={handleProject} className="form">
-        <h2>create a Project</h2>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="title"
-        />
+    <>
+      {" "}
+      {user ? (
+        <div className="w-full bg-white p-6 rounded-xl shadow-md border">
+          <form onSubmit={user && handleProject} className="space-y-4">
+            <h2 className="text-xl font-bold text-gray-800">
+              Create a Project
+            </h2>
 
-        <input
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="description"
-        />
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Title"
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
 
-        <h4>
-		  {error && <span className="error">{error}</span>}
-		  {successMsg && <span className="sucess">{successMsg}</span>}
-        </h4>
-        <button type="submit">Create Project</button>
+            <input
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Description"
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
 
-        <div className="mt-4 text-sm text-center">
-          <div>
-            <p>
-              See all projects:{" "}
-              <Link to="/all-projects" className="redirect">
-				All Projects
-              </Link>
-            </p>
-          </div>
-          <div>
-			<p>
-			  Go To Home:{" "}
-			  <Link to="/" className="redirect">
-				Click Here
-			  </Link>
-			</p>
-          </div>
+            {error && <p className="text-sm text-red-500">{error}</p>}
+            {successMsg && (
+              <p className="text-sm text-green-500">{successMsg}</p>
+            )}
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            >
+              Create Project
+            </button>
+
+            <div className="pt-4 text-sm text-center text-gray-600 space-y-2">
+              <p>
+                See all projects:{" "}
+                <Link
+                  to="/all-projects"
+                  className="text-blue-600 hover:underline"
+                >
+                  All Projects
+                </Link>
+              </p>
+              <p>
+                Go To Home:{" "}
+                <Link to="/" className="text-blue-600 hover:underline">
+                  Click Here
+                </Link>
+              </p>
+            </div>
+          </form>
         </div>
-      </form>
+      ) : (
+        <Unauthorized />
+      )}
     </>
   );
 }

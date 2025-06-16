@@ -29,6 +29,8 @@ import EditProject from "./pages/Projects/EditProject.jsx";
 import AddMemberToProject from "./pages/Projects/AddMemberToProject.jsx";
 import UpdateProjectMember from "./pages/Projects/UpdateProjectMember.jsx";
 
+// tasks route
+import ProjectTasks from "./pages/tasks/ProjectTasks.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -51,9 +53,9 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/profile" element={<Profile />} />
               // project route
-              <Route path="/all-projects" element={<AllProjects />} />
+              <Route index path="/all-projects" element={<AllProjects />} />
               <Route element={<ProjectAdmin />}>
-                <Route path="/create-project" element={<CreateProject />} />
+                {/* <Route path="/create-project" element={<CreateProject />} /> */}
                 <Route path="/projects/:projectId" element={<ProjectView />} />
                 <Route
                   path="/projects/:projectId/add-member"
@@ -66,6 +68,11 @@ function App() {
                 <Route
                   path="/projects/:projectId/edit"
                   element={<EditProject />}
+                />
+                // task Routes
+                <Route
+                  path="/projects/:projectId/tasks"
+                  element={<ProjectTasks />}
                 />
               </Route>
             </Route>
