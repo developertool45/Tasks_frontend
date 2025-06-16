@@ -41,67 +41,82 @@ const ViewProject = () => {
   if (!project) return <div className="text-center mt-10">Loading...</div>;
 
   return (
-    <div className="max-w-5xl mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Project Details</h1>
-      <div className="flex justify-between ">
-        <div>
-          <p className=" text-2xl ">
+    <div className="max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">
+        📁 Project Details
+      </h1>
+
+      <div className="flex flex-col md:flex-row justify-between gap-6">
+        {/* Left Info */}
+        <div className="space-y-3">
+          <p className="text-xl">
             <span className="font-semibold text-gray-600">Name:</span>{" "}
-            <span className="text-orange-500 ">{project.name}</span>
+            <span className="text-orange-500 font-medium">{project.name}</span>
           </p>
           <p>
-            <span className="font-semibold">Description:</span>{" "}
-            <span className="text-gray-600">{project.description}</span>
+            <span className="font-semibold text-gray-600">Description:</span>{" "}
+            <span className="text-gray-700">{project.description}</span>
           </p>
           <p>
-            <span className="font-semibold text-gray-600"> Managed By:</span>{" "}
-            {project.createdBy.fname}
+            <span className="font-semibold text-gray-600">Managed By:</span>{" "}
+            {project.createdBy?.fname || "Unknown"}
           </p>
         </div>
-        <div className="shadow-lg rounded-sm p-6">
+
+        {/* Right Info Box */}
+        <div className="bg-gray-50 rounded-lg shadow p-4 space-y-2 text-sm w-full md:w-1/3">
           <p>
-            <span className="font-semibold text-gray-600">Created At:</span>{" "}
-            {new Date(project.createdAt).toLocaleString()}
+            <span className="font-semibold text-gray-600">Created At : </span>{" "}
+            <span className="font-semibold text-gray-800">
+              {new Date(project.createdAt).toLocaleString()}
+            </span>
           </p>
           <p>
-            <span className="font-semibold text-gray-600 ">Status:</span>{" "}
+            <span className="font-semibold text-gray-600">Last Updated :</span>{" "}
+            <span className="font-semibold text-gray-800">
+              {new Date(project.updatedAt).toLocaleString()}
+            </span>
+          </p>
+          <p>
+            <span className="font-semibold text-gray-600">Status:</span>{" "}
             <span
-              className={
+              className={`font-bold ${
                 project.status === "completed"
-                  ? "text-green-600 font-bold"
-                  : "text-orange-600 font-bold"
-              }
+                  ? "text-green-600"
+                  : "text-orange-500"
+              }`}
             >
               {project.status || "Not set"}
             </span>
           </p>
-          <p className="font-semibold text-gray-600">Members: {projectMember.length}</p>
+          <p>
+            <span className="font-semibold text-gray-600">Members:</span>{" "}
+            {projectMember?.length}
+          </p>
         </div>
       </div>
-      <div className="flex gap-4 mt-4 text-sm">
+
+      {/* Action Buttons */}
+      <div className="flex flex-wrap gap-3 mt-6">
         <Link to={`/projects/${id}/tasks`}>
-          {" "}
-          <button className="bg-blue-300 hover:bg-blue-400  py-2 px-4 rounded ">
+          <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm">
             View Tasks
-          </button>{" "}
+          </button>
         </Link>
         <Link to={`/projects/${id}/edit`}>
-          {" "}
-          <button className="bg-yellow-300 hover:bg-yellow-400  py-2 px-4 rounded ">
+          <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded-md shadow-sm">
             Edit Project
-          </button>{" "}
+          </button>
         </Link>
         <Link to={`/projects/${id}/add-member`}>
-          {" "}
-          <button className="bg-gray-300 hover:bg-gray-600  py-2 px-4 rounded hover:text-white ">
-            Add member
-          </button>{" "}
+          <button className="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded-md shadow-sm">
+            Add Member
+          </button>
         </Link>
         <Link to={`/projects/${id}/members`}>
-          {" "}
-          <button className="bg-red-300 hover:bg-red-400  py-2 px-4 rounded hover:text-white">
-            view members
-          </button>{" "}
+          <button className="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-md shadow-sm">
+            View Members
+          </button>
         </Link>
       </div>
     </div>

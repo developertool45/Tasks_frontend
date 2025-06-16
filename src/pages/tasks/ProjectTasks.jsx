@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/Context";
 import apiClient from "../../../service/ApiClient";
 
@@ -14,23 +14,22 @@ const ProjectTasks = () => {
     assignedTo: "",
     status: "todo",
   });
-	const [message, setMessage] = useState("");
-	const [assignedTo, setAssignedTo] = useState(null);
-	
-	const fetchTasks = async () => {
-	setMessage("");
+  const [message, setMessage] = useState("");
+  const [assignedTo, setAssignedTo] = useState(null);
+  const navigate = useNavigate();
+  const fetchTasks = async () => {
+    setMessage("");
     try {
-		const res = await apiClient.getProjectTasks(projectId);
-		console.log("all tasks : ", res);
-		
-		if (res.success) {
-			if (res.data.length === 0) return setMessage("No tasks found");
-			return setTasks(res.data);
-		}
+      const res = await apiClient.getProjectTasks(projectId);
+      console.log("all tasks : ", res);
+
+      if (res.success) {
+        if (res.data.length === 0) return setMessage("No tasks found");
+        return setTasks(res.data);
+      }
     } catch (err) {
-		setMessage("Error loading tasks",);
-		console.log("Error loading tasks", err);
-		
+      setMessage("Error loading tasks");
+      console.log("Error loading tasks", err);
     }
   };
   const fetchProjectMembers = async () => {
@@ -44,8 +43,8 @@ const ProjectTasks = () => {
     }
   };
   useEffect(() => {
-	  fetchTasks();
-	  fetchProjectMembers();
+    fetchTasks();
+    fetchProjectMembers();
   }, [projectId]);
 
   const handleChange = (e) => {
@@ -53,13 +52,13 @@ const ProjectTasks = () => {
   };
 
   const handleSubmit = async (e) => {
-	  e.preventDefault();
-	  setMessage("");
+    e.preventDefault();
+    setMessage("");
     try {
       const options = {
-        ...formData,        
-		projectId: projectId,
-		assignedTo: assignedTo
+        ...formData,
+        projectId: projectId,
+        assignedTo: assignedTo,
       };
       const res = await apiClient.createTask(options);
       if (res.success) {
@@ -75,9 +74,8 @@ const ProjectTasks = () => {
         setMessage(res.message);
       }
     } catch (err) {
-		setMessage("Task creation failed!");
-		console.log(err);
-		
+      setMessage("Task creation failed!");
+      console.log(err);
     }
   };
 
@@ -136,6 +134,12 @@ const ProjectTasks = () => {
             Create Task
           </button>
         </form>
+        <button
+          onClick={() => navigate(-1)}
+          className="w-full mt-4 bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
+        >
+          Go Back
+        </button>
       </div>
 
       {/* Right - Tasks List */}
@@ -146,27 +150,61 @@ const ProjectTasks = () => {
         ) : (
           <ul className="space-y-4">
             {tasks.map((task, index) => (
-              <li key={task._id} className="border p-4 rounded shadow-sm">
-                <h3 className="font-semibold mb-2 text-xl text-blue-600">
-                  {index + 1}. {task.title}
-                </h3>
-                <p className="text-md text-gray-600 ">
-                  Description :{" "}
-                  <span className="text-gray-500">{task.description}</span>
-                </p>
-                <p className="text-sm py-4">
-                  <span className="text-gray-600 bg-gray-200 px-2 py-1 rounded">
-                    Assigned To :{" "}
-                    <span className="text-gray-600 font-semibold">
-                      {task.assignedTo?.fname || "N/A"}
+              <li
+                key={task._id}
+                className="border p-4 rounded shadow-sm flex justify-between items-center"
+              >
+                <div className="w-3/4">
+                  <h3 className="font-semibold mb-2 text-xl text-blue-600">
+                    {index + 1}. {task.title}
+                  </h3>
+                  <p className="text-md text-gray-600 ">
+                    Description :{" "}
+                    <span className="text-gray-500">{task.description}</span>
+                  </p>
+                  <p className="text-sm py-4">
+                    <span className="text-gray-600 bg-gray-200 px-2 py-1 rounded">
+                      Assigned To :{" "}
+                      <span className="text-gray-600 font-semibold">
+                        {task.assignedTo?.fname || "N/A"}
+                      </span>
+                    </span>{" "}
+                    |{" "}
+                    <span className="text-gray-700 px-2 py-1 rounded text-[18px]">
+                      {" "}
+                      Status :{" "}
+                      <span
+                        className={` px-2 py-1 rounded ${
+                          task.status === "done"
+                            ? " bg-green-200"
+                            : " bg-orange-200"
+                        }`}
+                      >
+                        {task.status}
+                      </span>
                     </span>
-                  </span>{" "}
-                  |{" "}
-                  <span className="text-gray-700 px-2 py-1 rounded text-[18px]">
-                    {" "}
-                    Status : <span className={` px-2 py-1 rounded ${task.status === "done" ? " bg-green-200" : " bg-orange-200"}`}>{task.status}</span>
-                  </span>
-                </p>
+                  </p>
+                </div>
+                <div className=" w-1/4 flex flex-col items-end gap-2 text-sm">
+                  <Link
+                    to={`/projects/${task._id}`}
+                    className="w-16 text-center bg-blue-200 px-2 py-1 hover:bg-blue-300 rounded"
+                  >
+                    View
+                  </Link>
+                  <Link
+                    to={`/projects/${task._id}/edit`}
+                    className="w-16 text-center bg-orange-200 px-2 py-1 hover:bg-orange-300 rounded"
+                  >
+                    Edit
+                  </Link>
+                  <Link
+                    onClick={() => handleDelete(task._id)}
+                    className="w-16 text-center bg-red-200 px-2 py-1 hover:bg-red-300 rounded"
+                  >
+                    Delete
+                  </Link>
+                </div>
               </li>
             ))}
           </ul>
