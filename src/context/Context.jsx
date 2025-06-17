@@ -6,12 +6,12 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const user = await apiClient.getUser();
-        if (user.statusCode !== 200) return;
+        if (!user.success) return;
         console.log("context", user);
         setUser(user.data);
       } catch (error) {
@@ -21,15 +21,14 @@ export const AuthProvider = ({ children }) => {
       }
     };
     fetchUser();
-  }, []);
+  }, [refresh]);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, loading }}>
+    <AuthContext.Provider value={{ user, setUser, loading, setRefresh }}>
       {children}
     </AuthContext.Provider>
   );
 };
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  return context;
+  return useContext(AuthContext);
 };

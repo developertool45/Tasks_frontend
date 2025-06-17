@@ -16,6 +16,7 @@ const ProjectTasks = () => {
   });
   const [message, setMessage] = useState("");
   const [assignedTo, setAssignedTo] = useState(null);
+  const [subtasks, setSubtasks] = useState([]);
   const navigate = useNavigate();
   const fetchTasks = async () => {
     setMessage("");
@@ -50,7 +51,6 @@ const ProjectTasks = () => {
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -75,6 +75,34 @@ const ProjectTasks = () => {
       }
     } catch (err) {
       setMessage("Task creation failed!");
+      console.log(err);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    setMessage("");
+    try {
+      const res = await apiClient.deleteTask(projectId, id);
+      if (res.success) {
+        setMessage("Task deleted!");
+        fetchTasks(); // Refresh list
+      } else {
+        setMessage(res.message);
+      }
+    } catch (err) {
+      setMessage("Task deletion failed!");
+      console.log(err);
+    }
+  };
+  //leave right now
+  const fetchSubtasks = async (id) => {
+    try {
+      const res = await apiClient.getSubTasks(projectId, id);
+      if (res.success) {
+        console.log("subtasks : ", res);
+        setSubtasks(res.data);
+      }
+    } catch (err) {
       console.log(err);
     }
   };
@@ -123,9 +151,9 @@ const ProjectTasks = () => {
             onChange={handleChange}
             className="w-full p-2 border rounded"
           >
-            <option value="todo">Pending</option>
+            <option value="todo">To Do</option>
             <option value="in_progress">In Progress</option>
-            <option value="done">Completed</option>
+            <option value="done">Done</option>
           </select>
           <button
             type="submit"
@@ -143,67 +171,89 @@ const ProjectTasks = () => {
       </div>
 
       {/* Right - Tasks List */}
-      <div className="w-2/3 bg-white p-4 rounded shadow">
-        <h2 className="text-lg font-bold mb-4">All Tasks</h2>
+      <div className="w-2/3 bg-white p-6 rounded-xl shadow-lg">
+        <h2 className="text-2xl font-bold mb-6 text-blue-700">📋 All Tasks</h2>
+
         {tasks.length === 0 ? (
-          <p className="text-gray-500">No tasks found.</p>
+          <p className="text-gray-500 text-center">No tasks found.</p>
         ) : (
-          <ul className="space-y-4">
+          <ul className="space-y-6">
             {tasks.map((task, index) => (
               <li
                 key={task._id}
-                className="border p-4 rounded shadow-sm flex justify-between items-center"
+                className="border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition"
               >
-                <div className="w-3/4">
-                  <h3 className="font-semibold mb-2 text-xl text-blue-600">
-                    {index + 1}. {task.title}
-                  </h3>
-                  <p className="text-md text-gray-600 ">
-                    Description :{" "}
-                    <span className="text-gray-500">{task.description}</span>
-                  </p>
-                  <p className="text-sm py-4">
-                    <span className="text-gray-600 bg-gray-200 px-2 py-1 rounded">
-                      Assigned To :{" "}
-                      <span className="text-gray-600 font-semibold">
+                <div className="flex justify-between items-start gap-4">
+                  {/* 🧾 Task Info */}
+                  <div className="w-3/4">
+                    <h3 className="text-xl font-semibold text-blue-600 mb-1">
+                      {index + 1}. {task.title}
+                    </h3>
+
+                    <p className="text-gray-700 mb-1">
+                      <span className=" text-gray-800">Description :</span>{" "}
+                      {task.description}
+                    </p>
+
+                    <p className="text-sm text-gray-700 mb-1">
+                      <span>Assigned To :</span>{" "}
+                      <span className="font-medium uppercase">
                         {task.assignedTo?.fname || "N/A"}
                       </span>
-                    </span>{" "}
-                    |{" "}
-                    <span className="text-gray-700 px-2 py-1 rounded text-[18px]">
-                      {" "}
-                      Status :{" "}
+                    </p>
+
+                    <p className="text-sm text-gray-700 mb-1">
+                      <span className="font-medium">Status:</span>{" "}
                       <span
-                        className={` px-2 py-1 rounded ${
-                          task.status === "done"
-                            ? " bg-green-200"
-                            : " bg-orange-200"
+                        className={`inline-block px-2 py-1 rounded text-white text-xs ${
+                          task.status === "done" || task.status === "completed"
+                            ? "bg-green-500"
+                            : "bg-yellow-400 text-black"
                         }`}
                       >
                         {task.status}
                       </span>
-                    </span>
-                  </p>
-                </div>
-                <div className=" w-1/4 flex flex-col items-end gap-2 text-sm">
-                  <Link
-                    to={`/projects/${task._id}`}
-                    className="w-16 text-center bg-blue-200 px-2 py-1 hover:bg-blue-300 rounded"
-                  >
-                    View
-                  </Link>
-                  <Link
-                    to={`/projects/${task._id}/edit`}
-                    className="w-16 text-center bg-orange-200 px-2 py-1 hover:bg-orange-300 rounded"
-                  >
-                    Edit
-                  </Link>
-                  <Link
-                    onClick={() => handleDelete(task._id)}
-                    className="w-16 text-center bg-red-200 px-2 py-1 hover:bg-red-300 rounded"
-                  >
-                    Delete
-                  </Link>
+                    </p>
+
+                    <div className="border-[1.2px] border-gray-300 rounded-md bg-gray-50 p-4 w-fit mt-4">
+                      <p className="text-sm text-gray-500">
+                        Created :{" "}
+                        <span className="font-medium">
+                          {new Date(task.createdAt).toLocaleString()}
+                        </span>
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Last Updated :{" "}
+                        <span className="font-medium">
+                          {new Date(task.updatedAt).toLocaleString()}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* 🛠️ Action Buttons */}
+                  <div className="w-25 flex flex-col items-end space-y-2 gap-2">
+                    <Link
+                      to={`/tasks/${projectId}/${task._id}`}
+                      className="w-full text-center bg-blue-500 text-white text-sm py-1 px-3 rounded hover:bg-blue-600 transition"
+                    >
+                      👁️ View
+                    </Link>
+
+                    <button
+                      onClick={() => handleDelete(task._id)}
+                      className="w-full text-center bg-orange-500 text-white text-sm py-1 px-3 rounded hover:bg-orange-600 transition"
+                    >
+                      🗑️ Delete
+                    </button>
+
+                    <Link
+                      to={`/tasks/${projectId}/${task._id}/subtasks`}
+                      className="w-full text-center bg-gray-400 text-white text-sm py-1 px-3 rounded hover:bg-gray-500 transition"
+                    >
+                      🧩 Subtasks
+                    </Link>
+                  </div>
                 </div>
               </li>
             ))}

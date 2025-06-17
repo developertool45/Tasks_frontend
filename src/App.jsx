@@ -31,6 +31,10 @@ import UpdateProjectMember from "./pages/Projects/UpdateProjectMember.jsx";
 
 // tasks route
 import ProjectTasks from "./pages/tasks/ProjectTasks.jsx";
+import ViewTask from "./pages/tasks/ViewTask.jsx";
+// subtasks route
+import SubtaskList from "./pages/subTask/SubtaskList.jsx";
+import TaskSummary from "./pages/tasks/TaskSummary.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -69,11 +73,29 @@ function App() {
                   path="/projects/:projectId/edit"
                   element={<EditProject />}
                 />
+                <Route
+                  path="/projects/:projectId/summary"
+                  element={<TaskSummary />}
+                />
                 // task Routes
                 <Route
                   path="/projects/:projectId/tasks"
                   element={<ProjectTasks />}
                 />
+                <Route
+                  path="/tasks/:projectId/:taskId"
+                  element={<ViewTask />}
+                />
+                <Route
+                  path="/tasks/:projectId/:taskId/edit"
+                  element={<ViewTask />}
+                />
+                // subtasks
+                <Route
+                  path="/tasks/:projectId/:taskId/subtasks"
+                  element={<SubtaskList />}
+                />
+                <Route path="/task-summary" element={<TaskSummary />} />
               </Route>
             </Route>
           </Routes>

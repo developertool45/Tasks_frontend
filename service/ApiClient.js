@@ -17,17 +17,14 @@ class ApiClient{
 			// console.log(`fetching Url : ${url}`)
 
 			const response = await fetch(url, config);
+			const data = await response.json();
 
 			if (!response.ok) {
 				// error object
-				const err = await response.json();
 				if (response.status === 400) {
 					throw Error(err.message);
-				}
-					
-			}						
-			const data = await response.json();		
-			
+				}					
+			}
 			return data;
 		} catch (error) {
 			console.log("fetch error", error);
@@ -157,6 +154,50 @@ class ApiClient{
 		return this.customFetch(`v1/tasks/create-task/${projectId}`, {
 			method: "post",
 			body: JSON.stringify({title, description, assignedTo, status})
+		})
+	}
+	async getTask(projectId, taskId) {
+		return this.customFetch(`v1/tasks/get-task/${projectId}/${taskId}`, {
+			method: "get",
+		})
+	}
+	async updateTask(projectId, id, { title, description, assignedTo, status }) {
+		return this.customFetch(`v1/tasks/update-task/${projectId}/${id}`, {
+			method: "post",
+			body: JSON.stringify({title, description, assignedTo, status})
+		})
+	}
+	async deleteTask( projectId,id) {
+		return this.customFetch(`v1/tasks/delete-task/${projectId}/${id}`, {
+			method: "post",
+		})
+	}
+	async assignTask(projectId, taskId, email) {
+		return this.customFetch(`v1/tasks/assign-task/${projectId}/${taskId}`, {
+			method: "post",
+			body: JSON.stringify({email})
+		})
+	}
+	async getSubTasks(projectId,taskId) {
+		return this.customFetch(`v1/subtasks/all-subtasks/${projectId}/${taskId}`, {
+			method: "get",
+		})
+	}
+	async createSubTask(projectId, taskId, { title, isCompleted }) {
+		return this.customFetch(`v1/subtasks/create-subtask/${projectId}/${taskId}`, {
+			method: "post",
+			body: JSON.stringify({title, isCompleted})
+		})
+	}
+	async updateSubTask(projectId, taskId, id, { title, status: isCompleted }) {
+		return this.customFetch(`v1/subtasks/update-subtask/${projectId}/${taskId}/${id}`, {
+			method: "post",
+			body: JSON.stringify({title, isCompleted})
+		})
+	}
+	async deleteSubTask(projectId, taskId, id) {
+		return this.customFetch(`v1/subtasks/delete-subtask/${projectId}/${taskId}/${id}`, {
+			method: "post",
 		})
 	}
 

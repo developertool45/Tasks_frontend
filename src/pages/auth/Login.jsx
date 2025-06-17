@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { user, setUser } = useAuth();
+  const { user, setUser, setRefresh } = useAuth();
   const [error, setError] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
 
@@ -24,12 +24,11 @@ const Login = () => {
       if (res.success) {
         setSuccessMsg(res.message);
         setUser(res.data);
+        setRefresh((prev) => !prev);
         // Save in localStorage
-        console.log(res);
-
         localStorage.setItem("userId", JSON.stringify(res.data.id));
         localStorage.setItem("token", JSON.stringify(res.data.token));
-        console.log(res.message);
+
         navigate("/all-projects");
       }
     } catch (error) {

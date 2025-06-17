@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/Context";
 import apiClient from "../../service/ApiClient";
-import "./Layout.css";
 
 export default function Header() {
   const { user, setUser } = useAuth();
-
   const navigate = useNavigate();
-  // login check
+
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("token");
     if (!userId || !token) {
-      console.log("user not logged in");
+      console.log("User not logged in");
     }
     if (!user) {
       apiClient.getProfile().then((res) => {
@@ -23,7 +21,7 @@ export default function Header() {
       });
     }
   }, []);
-  // logout
+
   const handleLogout = async () => {
     await apiClient.logout();
     localStorage.removeItem("userId");
@@ -31,87 +29,110 @@ export default function Header() {
     setUser(null);
     navigate("/login");
   };
-  return (
-    <>
-      <nav className="navbar-menu">
-        <ul className="nav-items ">
-          <li>
-            <NavLink to="/">
-              {({ isActive }) => (
-                <span className={isActive ? "nav-active" : ""}>Home</span>
-              )}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/all-projects">
-              {({ isActive }) => (
-                <span className={isActive ? "nav-active" : ""}>
-                  All Projects
-                </span>
-              )}
-            </NavLink>
-          </li>
-          {user && (
-            <>
-              {/* <li>
-                <NavLink to="/create-project">
-                  {({ isActive }) => (
-                    <span className={isActive ? "nav-active" : ""}>
-                      Add New Project
-                    </span>
-                  )}
-                </NavLink>
-              </li> */}
 
-              <li>
-                <NavLink to="/project-reports">
-                  {({ isActive }) => (
-                    <span className={isActive ? "nav-active" : ""}>
-                      Project Reports
-                    </span>
-                  )}
-                </NavLink>
-              </li>
-            </>
+  return (
+    <header className="bg-white border-b sticky top-0 py-4 px-6 flex items-center justify-between">
+      <div className="text-2xl font-bold text-blue-700 tracking-wide">
+        Task Manager
+      </div>
+
+      <nav className="flex gap-6 items-center">
+        <ul className="flex gap-4">
+          <li>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-600 font-semibold"
+                  : "text-gray-700 hover:text-blue-500"
+              }
+            >
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/all-projects"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-600 font-semibold"
+                  : "text-gray-700 hover:text-blue-500"
+              }
+            >
+              All Projects
+            </NavLink>
+          </li>
+
+          {user && (
+            <li>
+              <NavLink
+                to="/project-reports"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-blue-600 font-semibold"
+                    : "text-gray-700 hover:text-blue-500"
+                }
+              >
+                Project Reports
+              </NavLink>
+            </li>
           )}
         </ul>
 
-        <ul className="nav-items ">
+        <ul className="flex gap-4 border-l pl-4 ml-4">
           {user ? (
             <>
               <li>
-                <NavLink to="/profile">
-                  {({ isActive }) => (
-                    <span className={isActive ? "nav-active" : ""}>
-                      Profile
-                    </span>
-                  )}
+                <NavLink
+                  to="/profile"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-blue-600 font-semibold"
+                      : "text-gray-700 hover:text-blue-500"
+                  }
+                >
+                  Profile
                 </NavLink>
               </li>
               <li>
-                <span onClick={handleLogout}>Logout</span>
+                <button
+                  onClick={handleLogout}
+                  className="text-red-500 hover:text-red-600 font-semibold"
+                >
+                  Logout
+                </button>
               </li>
             </>
           ) : (
             <>
               <li>
-                <NavLink to="/register">
-                  {({ isActive }) => (
-                    <span className={isActive ? "nav-active" : ""}>Signup</span>
-                  )}
+                <NavLink
+                  to="/register"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-blue-600 font-semibold"
+                      : "text-gray-700 hover:text-blue-500"
+                  }
+                >
+                  Signup
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/login">
-                  {({ isActive }) => (
-                    <span className={isActive ? "nav-active" : ""}>Login</span>
-                  )}
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-blue-600 font-semibold"
+                      : "text-gray-700 hover:text-blue-500"
+                  }
+                >
+                  Login
                 </NavLink>
               </li>
             </>
           )}
         </ul>
       </nav>
-    </>
+    </header>
   );
 }
