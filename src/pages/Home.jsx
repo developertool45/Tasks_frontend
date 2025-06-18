@@ -7,7 +7,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen p-6">
       {/* Hero Section */}
       <div className="text-center py-10">
         <h1 className="text-4xl font-bold text-blue-600">Task Manager App</h1>

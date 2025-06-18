@@ -2,28 +2,28 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import apiClient from "../../../service/ApiClient";
 
-
-const AddMemberToProject = () => {
-  const {projectId: id } = useParams(); // project id from route
+const AddMemberToProject = ({ pid, setRefresh }) => {
+  const { projectId: id } = useParams(); // project id from route
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState({ text: "", type: "" });
-	const navigate = useNavigate();
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-		const res = await apiClient.addMembertoProject(id, email);
-		if(!res.success) return console.log(res.message);
+      const res = await apiClient.addMembertoProject(id, email);
+      if (!res.success) return console.log(res.message);
+      setRefresh((prev) => !prev);
       setMessage({ text: res.message, type: "success" });
       setEmail("");
     } catch (err) {
-		console.log(err);
-	  setMessage({ text: err.message, type: "error" });
+      console.log(err);
+      setMessage({ text: err.message, type: "error" });
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
+    <div className="max-full mx-auto  p-6 bg-gray-100 rounded mb-4">
       <h2 className="text-xl font-semibold mb-4">Add Member to Project</h2>
 
       {message.text && (
@@ -51,19 +51,21 @@ const AddMemberToProject = () => {
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-        >
-          Add Member
-			</button>
-		<button
-		  type="button"
-		  className="w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-700 transition"
-		  onClick={() => navigate(-1)}
-		>
-		  Go Back
-		</button>
+        <div className="flex gap-4">
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+          >
+            Add Member
+          </button>
+          <button
+            type="button"
+            className="w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-700 transition"
+            onClick={() => navigate(-1)}
+          >
+            Go Back
+          </button>
+        </div>
       </form>
     </div>
   );

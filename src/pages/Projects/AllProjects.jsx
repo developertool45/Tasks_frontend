@@ -4,11 +4,11 @@ import { Link } from "react-router";
 import { useNavigate, useParams } from "react-router-dom";
 import CreateProject from "./CreateProject";
 
+
 const allProjects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,15 +16,16 @@ const allProjects = () => {
     apiClient
       .getAllProjects()
       .then((res) => {
-        console.log(res);
-        setProjects(res.data);
+        console.log("sare projects", res);        
+        return setProjects(res.data);
+      })
+      .catch((error) => {
+        console.error("Failed to load projects", error);        
         setLoading(false);
       })
-      .catch((err) => {
-        console.error("Failed to load projects", err);
-        setLoading(false);
-      });
+      .finally(() => setLoading(false));
   }, [refresh]);
+  console.log("projects", projects);
 
   const handleDelete = async (id) => {
     try {
@@ -74,23 +75,29 @@ const allProjects = () => {
                   <div className="w-3/4">
                     <h3 className="text-xl font-semibold text-blue-700">
                       <span>{index + 1}. </span>
-                      {project.name}
+                      {project.name || project.project.name}
                     </h3>
-                    <p className="text-gray-600 mt-1">{project.description}</p>
+                    <p className="text-gray-600 mt-1">
+                      {project.description || project.project.description}
+                    </p>
                     <div className="text-sm text-gray-400 mt-2">
-                      Created by: {project.createdBy?.fname || "Unknown"} |{" "}
-                      {new Date(project.createdAt).toLocaleString()}
+                      User :{" "}
+                      {project.user?.fname ? project.user.fname : "Anonymous"}
+                      {""} |{" "}
+                      {project.project
+                        ? new Date(project.project.createdAt).toLocaleString()
+                        : new Date().toLocaleString()}
                     </div>
                   </div>
                   <div className=" w-1/4 flex flex-col items-end gap-2 text-sm">
                     <Link
-                      to={`/projects/${project._id}`}
+                      to={`/projects/${project.project._id}`}
                       className="w-16 text-center bg-blue-200 px-2 py-1 hover:bg-blue-300 rounded"
                     >
                       View
                     </Link>
                     <Link
-                      to={`/projects/${project._id}/edit`}
+                      to={`/projects/${project.project._id}/edit`}
                       className="w-16 text-center bg-orange-200 px-2 py-1 hover:bg-orange-300 rounded"
                     >
                       Edit

@@ -11,23 +11,21 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const { user, setUser } = useAuth();
-  const [error, setError] = useState(null);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setError("");
+    setMessage("");
     if (!fname || !email || !password || !username)
       return setError("all fields are required !");
     try {
       const res = await apiClient.signup(fname, email, password, username);
       console.log(res.data);
-      if (res.success) setUser(res.data.user);
+      setMessage(res.message);
     } catch (error) {
-      if (error.message === "User already exists") {
-        setTimeout(() => {
-          return navigate("/login");
-        }, 1000);
-      }
       console.log(error);
       setError(error.message);
     }
@@ -77,8 +75,8 @@ const Register = () => {
             required
           />
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
-
+          {error && <p className="text-md text-red-500">{error}</p>}
+          {message && <p className="text-md text-green-500">{message}</p>}
           <button
             type="submit"
             className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"

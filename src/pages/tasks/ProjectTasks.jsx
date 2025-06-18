@@ -163,7 +163,7 @@ const ProjectTasks = () => {
           </button>
         </form>
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(`/projects/${projectId}`)}
           className="w-full mt-4 bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
         >
           Go Back

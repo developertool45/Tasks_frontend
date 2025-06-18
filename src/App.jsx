@@ -4,6 +4,8 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+import ErrorBoundary from "./components/ErrorBoundary.jsx";
+import { ToastContainer } from "react-toastify";
 
 import Home from "./pages/Home";
 import Register from "./pages/auth/Register";
@@ -40,67 +42,92 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Layout>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            // auth route
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/email-verification" element={<EmailVerification />} />
-            <Route path="/email-verified/" element={<EmailVerified />} />
-            <Route path="/reset-password/" element={<PasswordReset />} />
-            // error
-            <Route path="*" element={<Error />} />
-            // Login/Register route
-            <Route element={<PublicRoute />}>
-              <Route path="/register" element={<Register />} />
-              <Route path="/login" element={<Login />} />
-            </Route>
-            <Route element={<ProtectedRoute />}>
-              <Route path="/profile" element={<Profile />} />
-              // project route
-              <Route index path="/all-projects" element={<AllProjects />} />
-              <Route element={<ProjectAdmin />}>
-                {/* <Route path="/create-project" element={<CreateProject />} /> */}
+          <ErrorBoundary>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              // auth route
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route
+                path="/email-verification"
+                element={<EmailVerification />}
+              />
+              <Route path="/email-verified/" element={<EmailVerified />} />
+              <Route path="/reset-password/" element={<PasswordReset />} />
+              // error
+              <Route path="*" element={<Error />} />
+              // Login/Register route
+              <Route element={<PublicRoute />}>
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
+              </Route>
+              <Route element={<ProtectedRoute />}>
+                <Route path="/profile" element={<Profile />} />
+                // project route
+                <Route index path="/all-projects" element={<AllProjects />} />
                 <Route path="/projects/:projectId" element={<ProjectView />} />
-                <Route
-                  path="/projects/:projectId/add-member"
-                  element={<AddMemberToProject />}
-                />
-                <Route
-                  path="/projects/:projectId/members"
-                  element={<UpdateProjectMember />}
-                />
-                <Route
-                  path="/projects/:projectId/edit"
-                  element={<EditProject />}
-                />
-                <Route
-                  path="/projects/:projectId/summary"
-                  element={<TaskSummary />}
-                />
-                // task Routes
-                <Route
-                  path="/projects/:projectId/tasks"
-                  element={<ProjectTasks />}
-                />
                 <Route
                   path="/tasks/:projectId/:taskId"
                   element={<ViewTask />}
                 />
                 <Route
-                  path="/tasks/:projectId/:taskId/edit"
-                  element={<ViewTask />}
+                  path="/projects/:projectId/tasks"
+                  element={<ProjectTasks />}
                 />
-                // subtasks
                 <Route
                   path="/tasks/:projectId/:taskId/subtasks"
                   element={<SubtaskList />}
                 />
-                <Route path="/task-summary" element={<TaskSummary />} />
+                <Route element={<ProjectAdmin />}>
+                  {/* <Route path="/create-project" element={<CreateProject />} /> */}
+                  {/* <Route
+                    path="/projects/:projectId"
+                    element={<ProjectView />}
+                  /> */}
+                  <Route
+                    path="/projects/:projectId/add-member"
+                    element={<AddMemberToProject />}
+                  />
+                  <Route
+                    path="/projects/:projectId/members"
+                    element={<UpdateProjectMember />}
+                  />
+                  <Route
+                    path="/projects/:projectId/edit"
+                    element={<EditProject />}
+                  />
+                  <Route
+                    path="/projects/:projectId/summary"
+                    element={<TaskSummary />}
+                  />
+                  // task Routes
+                  {/* <Route
+                    path="/projects/:projectId/tasks"
+                    element={<ProjectTasks />}
+                  /> */}
+                  <Route
+                    path="/tasks/:projectId/:taskId/edit"
+                    element={<ViewTask />}
+                  />
+                  // subtasks
+                  <Route path="/task-summary" element={<TaskSummary />} />
+                </Route>
               </Route>
-            </Route>
-          </Routes>
+            </Routes>
+          </ErrorBoundary>
         </Layout>
       </AuthProvider>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </BrowserRouter>
   );
 }

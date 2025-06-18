@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 class ApiClient{
 	constructor() {
 		this.baseUrl = 'http://localhost:8000/api/';
@@ -21,13 +22,15 @@ class ApiClient{
 
 			if (!response.ok) {
 				// error object
-				if (response.status === 400) {
-					throw Error(err.message);
+				if (response.status === 400) {					
+					throw Error(data.message);
 				}					
 			}
+			toast.success(data.message);
 			return data;
 		} catch (error) {
 			console.log("fetch error", error);
+			toast.error(error.message);
 			throw Error(error.message);
 		}
 	}

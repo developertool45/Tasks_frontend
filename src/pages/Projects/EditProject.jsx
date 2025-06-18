@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import apiClient from "../../../service/ApiClient";
 
+
 const EditProject = () => {
   const { projectId: id } = useParams();
   const navigate = useNavigate();
@@ -10,19 +11,22 @@ const EditProject = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    status: ""
+    status: "",
   });
 
   useEffect(() => {
     const fetchProject = async () => {
-      const res = await apiClient.getProject(id);
-      console.log(res);
-      
-      setFormData({
-        name: res.data.name,
-        description: res.data.description,
-        status: res.data.status || ""
-      });
+      try {
+        const res = await apiClient.getProject(id);
+        console.log(res);
+        setFormData({
+          name: res.data.name,
+          description: res.data.description,
+          status: res.data.status || "",
+        });
+      } catch (error) {
+        console.log(error);
+      }
     };
     fetchProject();
   }, [id]);
@@ -30,20 +34,25 @@ const EditProject = () => {
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await apiClient.updateProject(id, formData.name, formData.description, formData.status);
+      const res = await apiClient.updateProject(
+        id,
+        formData.name,
+        formData.description,
+        formData.status
+      );
       if (!res.success) return console.log(res.message);
       console.log("Project updated successfully!", formData);
-      
+
       navigate(`/projects/${id}`);
     } catch (error) {
-      console.log(error, error.message);      
+      console.log(error, error.message);
     }
   };
 
@@ -89,12 +98,20 @@ const EditProject = () => {
           </select>
         </div>
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-        >
-          Update Project
-        </button>
+        <div className="flex gap-2 space-x-4">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Update Project
+          </button>
+          <button
+            onClick={() => navigate(`/projects/${id}`)}
+            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+          >
+            Go Back
+          </button>
+        </div>
       </form>
     </div>
   );

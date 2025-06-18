@@ -112,14 +112,14 @@ const ViewProject = () => {
               ✏️ Edit Project
             </button>
           </Link>
-          <Link to={`/projects/${id}/add-member`}>
+          {/* <Link to={`/projects/${id}/add-member`}>
             <button className="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md">
               👤 Add Member
             </button>
-          </Link>
+          </Link> */}
           <Link to={`/projects/${id}/members`}>
             <button className="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md">
-              📋 View Members
+              👤 View Members
             </button>
           </Link>
           <Link to={`/projects/${id}/summary`}>

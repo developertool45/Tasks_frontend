@@ -3,6 +3,7 @@ import apiClient from '../../../service/ApiClient';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/Context';
 import "../auth/style.css";
+import { toast } from "react-toastify";
 function CreateProject({ setRefresh }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -19,14 +20,12 @@ function CreateProject({ setRefresh }) {
     if (!name || !description) return setError("all fields are required !");
     try {
       const res = await apiClient.createProject(name, description);
-      if (res.success) {
-        console.log(res);
-        console.log(res.message);
+      if (res.success) {        
         setRefresh((prev) => !prev);
         return setSuccessMsg(res.message);
       }
     } catch (error) {
-      console.log(error);
+      console.log(error);      
       setError(error.message);
     }
   };

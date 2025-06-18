@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import apiClient from "../../../service/ApiClient";
+import AddMemberToProject from "./AddMemberToProject";
 
 const UpdateProjectMember = () => {
   const { projectId: id } = useParams(); // project ID
@@ -57,6 +58,7 @@ const UpdateProjectMember = () => {
 
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white shadow rounded">
+      <AddMemberToProject projectId={id} setRefresh={setRefresh} />
       <h2 className="text-xl font-bold mb-4">Update Project Members</h2>
 
       {message.text && (

@@ -12,7 +12,7 @@ const ProjectAdmin = () => {
 
     if (!user) {
       navigate("/login", { replace: true });
-    } else if (user.role !== "admin") {
+    } else if (user.role !== "project_admin" && user.role !== "admin") {
       navigate("/unauthorized", { replace: true });
     } else {
       setReady(true); // user is valid and has access
