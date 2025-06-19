@@ -15,9 +15,9 @@ const ProjectTasks = () => {
     status: "todo",
   });
   const [message, setMessage] = useState("");
-  const [assignedTo, setAssignedTo] = useState(null);
   const [subtasks, setSubtasks] = useState([]);
   const navigate = useNavigate();
+  const [refresh, setRefresh] = useState(false);
   const fetchTasks = async () => {
     setMessage("");
     try {
@@ -46,7 +46,7 @@ const ProjectTasks = () => {
   useEffect(() => {
     fetchTasks();
     fetchProjectMembers();
-  }, [projectId]);
+  }, [refresh]);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -58,7 +58,6 @@ const ProjectTasks = () => {
       const options = {
         ...formData,
         projectId: projectId,
-        assignedTo: assignedTo,
       };
       const res = await apiClient.createTask(options);
       if (res.success) {
@@ -85,7 +84,7 @@ const ProjectTasks = () => {
       const res = await apiClient.deleteTask(projectId, id);
       if (res.success) {
         setMessage("Task deleted!");
-        fetchTasks(); // Refresh list
+        setTasks((prev) => prev.filter((task) => task._id !== id));
       } else {
         setMessage(res.message);
       }
@@ -133,8 +132,9 @@ const ProjectTasks = () => {
           />
           <label className="block mb-1">Assign To</label>
           <select
+            name="assignedTo"
             value={formData.assignedTo}
-            onChange={(e) => setAssignedTo(e.target.value)}
+            onChange={handleChange}
             className="w-full p-2 border rounded"
           >
             <option value="">Select a member</option>

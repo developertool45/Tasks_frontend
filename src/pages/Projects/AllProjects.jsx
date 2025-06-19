@@ -16,23 +16,22 @@ const allProjects = () => {
     apiClient
       .getAllProjects()
       .then((res) => {
-        console.log("sare projects", res);        
+        console.log("sare projects", res);
         return setProjects(res.data);
       })
       .catch((error) => {
-        console.error("Failed to load projects", error);        
+        console.error("Failed to load projects", error);
         setLoading(false);
       })
       .finally(() => setLoading(false));
   }, [refresh]);
-  console.log("projects", projects);
 
   const handleDelete = async (id) => {
     try {
       const res = await apiClient.deleteProject(id);
 
       if (!res.success) return console.log(res.message);
-
+      setRefresh((prev) => !prev);
       setProjects((prevProjects) =>
         prevProjects.filter((project) => project._id !== id)
       );
@@ -103,7 +102,7 @@ const allProjects = () => {
                       Edit
                     </Link>
                     <Link
-                      onClick={() => handleDelete(project._id)}
+                      onClick={() => handleDelete(project.project._id)}
                       className="w-16 text-center bg-red-200 px-2 py-1 hover:bg-red-300 rounded"
                     >
                       Delete

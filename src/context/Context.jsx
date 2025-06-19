@@ -11,7 +11,9 @@ export const AuthProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         const user = await apiClient.getUser();
-        if (!user.success) return;
+        if (user.successCode !== 200) {
+          setUser(null);
+        }
         console.log("context", user);
         setUser(user.data);
       } catch (error) {

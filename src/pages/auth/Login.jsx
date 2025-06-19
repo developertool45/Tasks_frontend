@@ -4,7 +4,7 @@ import { useAuth } from "../../context/Context";
 import "./style.css";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-
+import { toast } from "react-toastify";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,8 +21,9 @@ const Login = () => {
     if (!email || !password) return setError("Please enter email and password");
     try {
       const res = await apiClient.login(email, password);
-      if (res.success) {
+      if (res.statusCode === 200) {
         setSuccessMsg(res.message);
+        toast.success(res.message);
         setUser(res.data);
         setRefresh((prev) => !prev);
         // Save in localStorage
@@ -34,6 +35,7 @@ const Login = () => {
     } catch (error) {
       console.log(error);
       setError(error.message);
+      toast.error(error.message);
       setUser(null);
       setSuccessMsg("");
     }

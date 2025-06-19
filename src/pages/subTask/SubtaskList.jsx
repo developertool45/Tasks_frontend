@@ -11,6 +11,7 @@ const SubtaskList = () => {
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
+    remark: "",
     status: "false",
   });
   const [message, setMessage] = useState({ text: "", type: "" });
@@ -44,14 +45,11 @@ const SubtaskList = () => {
     try {
       let res;
       if (editMode) {
-        res = await apiClient.updateSubTask(
-          projectId,
-          taskId,
-          editId,
-          {...formData, status: formData.status === "true" ? true : false}
-		  );
-		  console.log(formData);
-		  
+        res = await apiClient.updateSubTask(projectId, taskId, editId, {
+          ...formData,
+          status: formData.status === "true" ? true : false,
+        });
+        console.log(formData);
       } else {
         res = await apiClient.createSubTask(projectId, taskId, {
           ...formData,
@@ -66,7 +64,7 @@ const SubtaskList = () => {
         type: "success",
       });
 
-      setFormData({ title: "", status: "false" });
+      setFormData({ title: "", status: "false", remark: "" });
       setEditMode(false);
       setEditId(null);
       fetchSubtasks();
@@ -82,19 +80,21 @@ const SubtaskList = () => {
     setFormData({
       title: subtask.title,
       status: subtask.status,
+      remark: subtask.remark,
     });
-	};
-	
-const handleDelete = (id) => {
-	apiClient
-	  .deleteSubTask(projectId, taskId, id)
-	  .then((res) => {
-		if (!res.success) return setMessage({ text: res.message, type: "error" });
-		setMessage({ text: "Subtask deleted!", type: "success" });
-		fetchSubtasks();
-	  })
-	  .catch((err) => setMessage({ text: err.message, type: "error" }));
-}
+  };
+
+  const handleDelete = (id) => {
+    apiClient
+      .deleteSubTask(projectId, taskId, id)
+      .then((res) => {
+        if (!res.success)
+          return setMessage({ text: res.message, type: "error" });
+        setMessage({ text: "Subtask deleted!", type: "success" });
+        fetchSubtasks();
+      })
+      .catch((err) => setMessage({ text: err.message, type: "error" }));
+  };
 
   return (
     <div className="max-w-6xl mx-auto mt-10 grid grid-cols-3 gap-6">
@@ -111,6 +111,15 @@ const handleDelete = (id) => {
             value={formData.title}
             onChange={handleChange}
             placeholder="Subtask Title"
+            className="w-full border p-2 rounded"
+            required
+          />
+          <input
+            type="text"
+            name="remark"
+            value={formData.remark}
+            onChange={handleChange}
+            placeholder="Subtask remark"
             className="w-full border p-2 rounded"
             required
           />
@@ -189,6 +198,9 @@ const handleDelete = (id) => {
                     >
                       {subtask.isCompleted ? "Done" : "Pending"}
                     </span>
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Remark : {subtask.remark}
                   </p>
                 </div>
                 <div className="flex gap-2 w-1/5 justify-end">

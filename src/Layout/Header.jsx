@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/Context";
 import apiClient from "../../service/ApiClient";
+import { toast } from "react-toastify";
 
 export default function Header() {
   const { user, setUser } = useAuth();
@@ -23,7 +24,9 @@ export default function Header() {
   }, []);
 
   const handleLogout = async () => {
-    await apiClient.logout();
+    const res = await apiClient.logout();
+    if (!res.success) return toast.error(res.message);
+    toast.success(res.message);
     localStorage.removeItem("userId");
     localStorage.removeItem("token");
     setUser(null);

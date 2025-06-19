@@ -1,4 +1,4 @@
-import { toast } from "react-toastify";
+
 class ApiClient{
 	constructor() {
 		this.baseUrl = 'http://localhost:8000/api/';
@@ -22,15 +22,13 @@ class ApiClient{
 
 			if (!response.ok) {
 				// error object
-				if (response.status === 400) {					
-					throw Error(data.message);
-				}					
-			}
-			toast.success(data.message);
+				throw Error(data.message);
+				// if (response.status === 400) {					
+				// }					
+			}			
 			return data;
 		} catch (error) {
-			console.log("fetch error", error);
-			toast.error(error.message);
+			console.log("fetch error", error);			
 			throw Error(error.message);
 		}
 	}
@@ -84,6 +82,18 @@ class ApiClient{
 	async getProfile() {
 		return this.customFetch('v1/users/get-profile', {
 			method: "post",
+		})
+	}
+	async updateProfile(id,data) {
+		return this.customFetch('v1/users/update-profile', {
+			method: "post",
+			body: JSON.stringify(data)
+		})
+	}
+	async uploadAvatar(id, formData) {
+		return this.customFetch(`v1/users/upload-avatar/${id}`, {
+			method: "post",
+			body: formData,			
 		})
 	}
 	async logout() {
@@ -186,16 +196,16 @@ class ApiClient{
 			method: "get",
 		})
 	}
-	async createSubTask(projectId, taskId, { title, isCompleted }) {
+	async createSubTask(projectId, taskId, { title, isCompleted, remark = null }) {
 		return this.customFetch(`v1/subtasks/create-subtask/${projectId}/${taskId}`, {
 			method: "post",
-			body: JSON.stringify({title, isCompleted})
+			body: JSON.stringify({title, isCompleted, remark})
 		})
 	}
-	async updateSubTask(projectId, taskId, id, { title, status: isCompleted }) {
+	async updateSubTask(projectId, taskId, id, { title, status: isCompleted, remark = null }) {
 		return this.customFetch(`v1/subtasks/update-subtask/${projectId}/${taskId}/${id}`, {
 			method: "post",
-			body: JSON.stringify({title, isCompleted})
+			body: JSON.stringify({title, isCompleted, remark})
 		})
 	}
 	async deleteSubTask(projectId, taskId, id) {
