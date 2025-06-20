@@ -36,7 +36,7 @@ export default function Header() {
   return (
     <header className="bg-white border-b sticky top-0 py-4 px-6 flex items-center justify-between">
       <div className="text-2xl font-bold text-blue-700 tracking-wide">
-        Task Manager
+        <NavLink to="/">Task Manager</NavLink>
       </div>
 
       <nav className="flex gap-6 items-center">

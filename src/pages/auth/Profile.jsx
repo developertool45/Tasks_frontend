@@ -81,23 +81,33 @@ function Profile() {
     formData.append("avatar", file);
 
     try {
-      const res = await apiClient.uploadAvatar(user._id, formData);
-      if (res.success) {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/v1/users/upload-avatar`,
+        {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        }
+      );
+
+      const res = await response.json();
+
+      if (response.ok && res.success) {
         setUser((prev) => ({
           ...prev,
-          avatar: { url: res.data.avatar.url }, // Fixed
+          avatar: { url: res.data.avatar.url },
         }));
         setRefresh((prev) => !prev);
-        toast.success(res.message);
+        toast.success(res.message || "Image uploaded successfully!");
       } else {
-        console.error(res.message);
-        toast.error(res.message);
+        toast.error(res.message || "Image upload failed");
       }
     } catch (err) {
-      toast.error(err.message || "Upload failed");
       console.error("Upload error", err);
+      toast.error(err.message || "Something went wrong during upload");
     }
   };
+  
 
   return (
     <div className="max-w-6xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
