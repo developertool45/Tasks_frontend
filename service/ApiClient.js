@@ -101,6 +101,13 @@ class ApiClient{
 			method: "get",
 		})
 	}
+	async changePassword(data) {
+		return this.customFetch('v1/users/change-password', {
+			method: "post",
+			body: JSON.stringify(data)
+		})
+	}
+	// projects endpoints
 	async getAllProjects() {
 		return this.customFetch('v1/projects/all-projects', {
 			method: "get",
@@ -211,6 +218,13 @@ class ApiClient{
 	async deleteSubTask(projectId, taskId, id) {
 		return this.customFetch(`v1/subtasks/delete-subtask/${projectId}/${taskId}/${id}`, {
 			method: "post",
+		})
+	}
+
+	// all projects With tasks
+	async getAllProjectsWithTasks() {
+		return this.customFetch('v1/projects/all-projects-with-tasks', {
+			method: "get",
 		})
 	}
 

@@ -3,13 +3,15 @@ import apiClient from "../../../service/ApiClient";
 import { Link } from "react-router";
 import { useNavigate, useParams } from "react-router-dom";
 import CreateProject from "./CreateProject";
-
+import { toast } from "react-toastify";
+import { useAuth } from "../../context/Context";
 
 const allProjects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     // Replace with your API URL
@@ -32,10 +34,12 @@ const allProjects = () => {
 
       if (!res.success) return console.log(res.message);
       setRefresh((prev) => !prev);
+      toast.success(res.message);
       setProjects((prevProjects) =>
         prevProjects.filter((project) => project._id !== id)
       );
     } catch (error) {
+      toast.error(error.message);
       console.error("Failed to delete project", error);
     }
   };

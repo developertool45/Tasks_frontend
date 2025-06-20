@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import apiClient from "../../../service/ApiClient";
+import { toast } from "react-toastify";
 
 const ViewTask = () => {
   const { projectId, taskId } = useParams();
@@ -41,11 +42,13 @@ const ViewTask = () => {
       if (res.success) {
         setTask(res.data);
         setEditMode(false);
+        toast.success(res.message);
         navigate(`/tasks/${projectId}/${taskId}`);
       } else {
         console.error(res.message);
       }
     } catch (err) {
+      toast.error(err.message);
       console.error("Update failed", err);
     }
   };

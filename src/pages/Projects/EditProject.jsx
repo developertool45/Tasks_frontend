@@ -2,7 +2,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import apiClient from "../../../service/ApiClient";
-
+import { toast } from "react-toastify";
 
 const EditProject = () => {
   const { projectId: id } = useParams();
@@ -18,6 +18,7 @@ const EditProject = () => {
     const fetchProject = async () => {
       try {
         const res = await apiClient.getProject(id);
+        toast.success(res.message);
         console.log(res);
         setFormData({
           name: res.data.name,
@@ -25,6 +26,7 @@ const EditProject = () => {
           status: res.data.status || "",
         });
       } catch (error) {
+        toast.error(error.message);
         console.log(error);
       }
     };

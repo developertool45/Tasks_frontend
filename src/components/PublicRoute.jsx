@@ -4,7 +4,15 @@ import { useAuth } from "../context/Context";
 const PublicRoute = () => {
   const { user } = useAuth();
 
-  return user ? <Navigate to="/" replace /> : <Outlet />;
+  return user ? (
+    user.isEmailVerified ? (
+      <Navigate to="/" replace />
+    ) : (
+      <Navigate to="/email-verification" replace />
+    )
+  ) : (
+    <Outlet />
+  );
 };
 
 export default PublicRoute;

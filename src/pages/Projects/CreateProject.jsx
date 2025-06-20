@@ -8,9 +8,7 @@ function CreateProject({ setRefresh }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
-
   const { user } = useAuth();
 
   const handleProject = async (e) => {
@@ -18,14 +16,20 @@ function CreateProject({ setRefresh }) {
     setError(null);
     setSuccessMsg("");
     if (!name || !description) return setError("all fields are required !");
+    if (user && (user.role == "member" || user.role == "user")) {
+      toast.error("You are not authorized to create a project!");
+      return setError("You are not authorized to create a project!");
+    }
     try {
       const res = await apiClient.createProject(name, description);
-      if (res.success) {        
+      if (res.success) {
         setRefresh((prev) => !prev);
+        toast.success(res.message);
         return setSuccessMsg(res.message);
       }
     } catch (error) {
-      console.log(error);      
+      console.log(error);
+      toast.error(error.message);
       setError(error.message);
     }
   };
@@ -35,7 +39,10 @@ function CreateProject({ setRefresh }) {
       {" "}
       {user ? (
         <div className="w-full bg-white p-6 rounded-xl shadow-md border">
-          <form onSubmit={user && handleProject} className="space-y-4">
+          <form
+            onSubmit={user && handleProject}
+            className="flex flex-col space-y-4"
+          >
             <h2 className="text-xl font-bold text-gray-800">
               Create a Project
             </h2>

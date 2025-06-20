@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import apiClient from "../../../service/ApiClient";
 
+import { toast } from "react-toastify";
 const ViewProject = () => {
   const { projectId: id } = useParams();
   const [project, setProject] = useState(null);
@@ -122,7 +123,7 @@ const ViewProject = () => {
               👤 View Members
             </button>
           </Link>
-          <Link to={`/projects/${id}/summary`}>
+          <Link to={`/projects/${id}/report`}>
             <button className="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md">
               📊 Task Summary
             </button>

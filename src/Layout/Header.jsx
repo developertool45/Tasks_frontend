@@ -69,7 +69,7 @@ export default function Header() {
           {user && (
             <li>
               <NavLink
-                to="/project-reports"
+                to="/task-summary"
                 className={({ isActive }) =>
                   isActive
                     ? "text-blue-600 font-semibold"

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/Context";
 import apiClient from "../../../service/ApiClient";
+import { toast } from "react-toastify";
 
 const ProjectTasks = () => {
   const { projectId } = useParams();
@@ -74,6 +75,7 @@ const ProjectTasks = () => {
       }
     } catch (err) {
       setMessage("Task creation failed!");
+      toast.error("Task creation failed!");
       console.log(err);
     }
   };
@@ -84,12 +86,15 @@ const ProjectTasks = () => {
       const res = await apiClient.deleteTask(projectId, id);
       if (res.success) {
         setMessage("Task deleted!");
+        fetchTasks();
+        toast.success(res.message);
         setTasks((prev) => prev.filter((task) => task._id !== id));
       } else {
         setMessage(res.message);
       }
     } catch (err) {
       setMessage("Task deletion failed!");
+      toast.error("Task deletion failed!");
       console.log(err);
     }
   };

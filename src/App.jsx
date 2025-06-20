@@ -37,6 +37,7 @@ import ViewTask from "./pages/tasks/ViewTask.jsx";
 // subtasks route
 import SubtaskList from "./pages/subTask/SubtaskList.jsx";
 import TaskSummary from "./pages/tasks/TaskSummary.jsx";
+import ProjectReport from "./pages/Projects/ProjectReport.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -46,17 +47,15 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               // auth route
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route
-                path="/email-verification"
-                element={<EmailVerification />}
-              />
-              <Route path="/email-verified/" element={<EmailVerified />} />
-              <Route path="/reset-password/" element={<PasswordReset />} />
-              // error
-              <Route path="*" element={<Error />} />
-              // Login/Register route
               <Route element={<PublicRoute />}>
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route
+                  path="/email-verification"
+                  element={<EmailVerification />}
+                />
+                <Route path="/email-verified/" element={<EmailVerified />} />
+                <Route path="/reset-password/" element={<PasswordReset />} />
+                // Login/Register route
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
               </Route>
@@ -110,14 +109,20 @@ function App() {
                   />
                   // subtasks
                   <Route path="/task-summary" element={<TaskSummary />} />
+                  <Route
+                    path="/projects/:projectId/report"
+                    element={<ProjectReport />}
+                  />
                 </Route>
               </Route>
+              // error
+              <Route path="*" element={<Error />} />
             </Routes>
           </ErrorBoundary>
         </Layout>
       </AuthProvider>
       <ToastContainer
-        position="top-right"
+        position="bottom-left"
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={true}

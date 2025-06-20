@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { user, setUser, setRefresh } = useAuth();
+  const { user, setUser, refreshUser } = useAuth();
   const [error, setError] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
 
@@ -25,7 +25,7 @@ const Login = () => {
         setSuccessMsg(res.message);
         toast.success(res.message);
         setUser(res.data);
-        setRefresh((prev) => !prev);
+        refreshUser();
         // Save in localStorage
         localStorage.setItem("userId", JSON.stringify(res.data.id));
         localStorage.setItem("token", JSON.stringify(res.data.token));

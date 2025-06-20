@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import apiClient from "../../../service/ApiClient";
 import AddMemberToProject from "./AddMemberToProject";
-
+import { toast } from "react-toastify";
 const UpdateProjectMember = () => {
   const { projectId: id } = useParams(); // project ID
   const [members, setMembers] = useState([]);
@@ -30,7 +30,6 @@ const UpdateProjectMember = () => {
     try {
       const res = await apiClient.updateMemberRole(id, memberId, role);
       if (!res.success) return setMessage({ text: res.message, type: "error" });
-
       // Optimistic UI update
       setMembers((prev) =>
         prev.map((m) => (m._id === memberId ? { ...m, role } : m))
@@ -38,8 +37,10 @@ const UpdateProjectMember = () => {
 
       setRefresh((prev) => !prev);
       setMessage({ text: "Member updated successfully!", type: "success" });
+      toast.success(res.message);
     } catch (err) {
       setMessage({ text: "Update failed!", type: "error" });
+      toast.error(err.message);
     }
   };
   const removeUser = async (id, memberId, email) => {
@@ -51,7 +52,9 @@ const UpdateProjectMember = () => {
       setRefresh((prev) => !prev);
       setMembers((prev) => prev.filter((m) => m._id !== memberId));
       setMessage({ text: "Member removed successfully!", type: "success" });
+      toast.success(res.message);
     } catch (err) {
+      toast.error(err.message);
       setMessage({ text: "Failed to remove member", type: "error" });
     }
   };

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import apiClient from "../../../service/ApiClient";
 import { useAuth } from "../../context/Context";
-import { Link } from "react-router";
 import { toast } from "react-toastify";
 function Profile() {
   const { user, setUser } = useAuth();
@@ -61,11 +60,18 @@ function Profile() {
   const handleChangePassword = async () => {
     try {
       const res = await apiClient.changePassword(passwordData);
+      if (res.success) {
+        toast.success(res.message);
+      }
       setPasswordMode(false);
-      alert("Password updated successfully!");
     } catch (error) {
       console.error(error);
+      toast.error(error.message);
     }
+    setPasswordData({
+      oldPassword: "",
+      newPassword: "",
+    });
   };
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];

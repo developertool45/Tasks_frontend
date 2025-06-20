@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import apiClient from "../../../service/ApiClient";
+import { toast } from "react-toastify";
 
 const SubtaskList = () => {
   const { projectId, taskId } = useParams();
@@ -49,16 +50,17 @@ const SubtaskList = () => {
           ...formData,
           status: formData.status === "true" ? true : false,
         });
-        console.log(formData);
       } else {
         res = await apiClient.createSubTask(projectId, taskId, {
           ...formData,
           status: formData.status === "true" ? true : false,
         });
       }
-
-      if (!res.success) return setMessage({ text: res.message, type: "error" });
-
+      toast.success(res.message);
+      if (!res.success) {
+        toast.error(res.message);
+        return setMessage({ text: res.message, type: "error" });
+      }
       setMessage({
         text: editMode ? "Subtask updated!" : "Subtask created!",
         type: "success",
@@ -70,6 +72,7 @@ const SubtaskList = () => {
       fetchSubtasks();
     } catch (err) {
       setMessage({ text: err.message, type: "error" });
+      toast.error(err.message);
     }
   };
 
@@ -88,12 +91,19 @@ const SubtaskList = () => {
     apiClient
       .deleteSubTask(projectId, taskId, id)
       .then((res) => {
-        if (!res.success)
+        if (!res.success) {
+          toast.error(res.message);
           return setMessage({ text: res.message, type: "error" });
+        }
         setMessage({ text: "Subtask deleted!", type: "success" });
         fetchSubtasks();
+        toast.success(res.message);
+        return setMessage({ text: res.message, type: "error" });
       })
-      .catch((err) => setMessage({ text: err.message, type: "error" }));
+      .catch((err) => {
+        setMessage({ text: err.message, type: "error" });
+        toast.error(err.message);
+      });
   };
 
   return (
