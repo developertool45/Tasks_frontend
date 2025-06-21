@@ -7,6 +7,9 @@ import { toast } from "react-toastify";
 function CreateProject({ setRefresh }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [date, setDate] = useState(
+    new Date().toISOString().split("T")[0] || ""
+  );
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState("");
   const { user } = useAuth();
@@ -15,13 +18,14 @@ function CreateProject({ setRefresh }) {
     e.preventDefault();
     setError(null);
     setSuccessMsg("");
-    if (!name || !description) return setError("all fields are required !");
+    if (!name || !description || !date)
+      return setError("all fields are required !");
     if (user && (user.role == "member" || user.role == "user")) {
       toast.error("You are not authorized to create a project!");
       return setError("You are not authorized to create a project!");
     }
     try {
-      const res = await apiClient.createProject(name, description);
+      const res = await apiClient.createProject(name, description, date);
       if (res.success) {
         setRefresh((prev) => !prev);
         toast.success(res.message);
@@ -60,6 +64,14 @@ function CreateProject({ setRefresh }) {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Description"
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            <input
+              onChange={(e) => setDate(e.target.value)}
+              value={date}
+              type="date"
+              name="dueDate"
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 

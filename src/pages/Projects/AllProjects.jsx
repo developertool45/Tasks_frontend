@@ -83,13 +83,37 @@ const allProjects = () => {
                     <p className="text-gray-600 mt-1">
                       {project.description || project.project.description}
                     </p>
-                    <div className="text-sm text-gray-400 mt-2">
-                      User :{" "}
-                      {project.user?.fname ? project.user.fname : "Anonymous"}
-                      {""} |{" "}
+                    {/* <p className="text-gray-600 text-sm">
+                      Due Date :{" "}
+                      {project.project.dueDate
+                        ? project.project.dueDate.split("T")[0]
+                        : ""}
+                    </p> */}
+                    <div className="text-sm text-gray-400 mt-1">
+                      {user && user.role == "member"
+                        ? "Assigned To: "
+                        : "Created By: "}
+                      {project.user?.fname ? project.user.fname : "Anonymous"}{" "}
+                      {/* |{" "}
                       {project.project
                         ? new Date(project.project.createdAt).toLocaleString()
-                        : new Date().toLocaleString()}
+                        : new Date().toLocaleString()} */}{" "}
+                      |
+                      {project.project &&
+                      project.project.status !== "completed" ? (
+                        <span className="font-semibold text-red-400">
+                          {" "}
+                          Due Date :{" "}
+                          {project.project.dueDate
+                            ? project.project.dueDate.split("T")[0]
+                            : ""}
+                        </span>
+                      ) : (
+                        <span className="font-semibold text-green-600">
+                          {" "}
+                          Completed
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className=" w-1/4 flex flex-col items-end gap-2 text-sm">

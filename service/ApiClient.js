@@ -113,10 +113,10 @@ class ApiClient{
 			method: "get",
 		})
 	}
-	async createProject(name, description) {
+	async createProject(name, description, date) {
 		return this.customFetch('v1/projects/new-project', {
 			method: "post",
-			body: JSON.stringify({name, description})
+			body: JSON.stringify({name, description, date})
 		})
 	}
 	async getProject(id) {
@@ -124,10 +124,10 @@ class ApiClient{
 			method: "get",
 		})
 	}
-	async updateProject(id, name, description, status) {
+	async updateProject(id, name, description, status,dueDate) {
 		return this.customFetch(`v1/projects/update-project/${id}`, {
 			method: "post",
-			body: JSON.stringify({name, description, status})
+			body: JSON.stringify({name, description, status,dueDate})
 		})
 	}
 	async deleteProject(id) {

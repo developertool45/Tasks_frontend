@@ -12,6 +12,7 @@ const EditProject = () => {
     name: "",
     description: "",
     status: "",
+    dueDate: "",
   });
 
   useEffect(() => {
@@ -24,6 +25,7 @@ const EditProject = () => {
           name: res.data.name,
           description: res.data.description,
           status: res.data.status || "",
+          dueDate: res.data.dueDate.split("T")[0] || "",
         });
       } catch (error) {
         toast.error(error.message);
@@ -47,7 +49,8 @@ const EditProject = () => {
         id,
         formData.name,
         formData.description,
-        formData.status
+        formData.status,
+        formData.dueDate
       );
       if (!res.success) return console.log(res.message);
       console.log("Project updated successfully!", formData);
@@ -99,6 +102,13 @@ const EditProject = () => {
             <option value="completed">Completed</option>
           </select>
         </div>
+        <input
+          onChange={handleChange}
+          value={formData.dueDate}
+          type="date"
+          name="dueDate"
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
         <div className="flex gap-2 space-x-4">
           <button

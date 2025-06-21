@@ -91,6 +91,12 @@ const ViewProject = () => {
             </span>
           </div>
           <div className="flex justify-between text-sm">
+            <span className="text-gray-600 font-medium">Due Date:</span>
+            <span className="text-orange-700 font-semibold">
+              {project.dueDate.split("T")[0].toLocaleString() || "Not set"}
+            </span>
+          </div>
+          <div className="flex justify-between text-sm">
             <span className="text-gray-600 font-medium">Members:</span>
             <span className="text-blue-600 font-semibold">
               {projectMember?.length}
