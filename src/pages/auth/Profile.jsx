@@ -129,7 +129,7 @@ function Profile() {
 
             <label htmlFor="avatarInput">
               <img
-                src={user.avatar.url}
+                src={user.avatar ? user.avatar.url : ""}
                 alt="avatar"
                 className="w-28 h-28 mb-4 rounded-full border shadow cursor-pointer"
               />

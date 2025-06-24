@@ -3,7 +3,7 @@ import apiClient from "../../../service/ApiClient";
 import { useAuth } from "../../context/Context";
 import "./style.css";
 import { Link, useSearchParams } from "react-router-dom";
-
+import { toast } from "react-toastify";
 
 const PasswordReset = () => {
   const [searchParams] = useSearchParams();
@@ -23,12 +23,12 @@ const PasswordReset = () => {
     try {
       const res = await apiClient.resetPassword(token, password);
       if (res.success) {
-        console.log(res);
         console.log(res.message);
-
         return setSuccessMsg(res.message);
       }
+      toast.success(res.message);
     } catch (error) {
+      toast.error(error.message);
       console.log(error);
       setError(error.message);
     }

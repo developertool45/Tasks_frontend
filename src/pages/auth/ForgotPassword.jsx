@@ -4,25 +4,26 @@ import { useAuth } from "../../context/Context";
 import "./style.css";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-
+import { toast } from "react-toastify";
 const ForgotPassword = () => {
-	const [email, setEmail] = useState("");  
-	const [error, setError] = useState(false);
-	const [successMsg, setSuccessMsg] = useState('');
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!email ) return setError("Please enter an email ");
+    if (!email) return setError("Please enter an email ");
     try {
-		const res = await apiClient.forgotPassword(email);
-		console.log(res);
-		
-    if (res.success) {
-      return setSuccessMsg(res.data);
-    }
-    
+      const res = await apiClient.forgotPassword(email);
+      console.log(res);
+
+      if (res.success) {
+        return setSuccessMsg(res.data);
+      }
+      toast.success(res.message);
     } catch (error) {
       console.log(error);
+      toast.error(error.message);
       setError(error.message);
     }
   };

@@ -53,10 +53,12 @@ const EditProject = () => {
         formData.dueDate
       );
       if (!res.success) return console.log(res.message);
+      toast.success(res.message);
       console.log("Project updated successfully!", formData);
 
       navigate(`/projects/${id}`);
     } catch (error) {
+      toast.error(error.message);
       console.log(error, error.message);
     }
   };
