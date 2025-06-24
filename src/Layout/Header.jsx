@@ -9,11 +9,6 @@ export default function Header() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    const token = localStorage.getItem("token");
-    if (!userId || !token) {
-      console.log("User not logged in");
-    }
     if (!user) {
       apiClient.getProfile().then((res) => {
         if (res.success) {
@@ -27,8 +22,8 @@ export default function Header() {
     const res = await apiClient.logout();
     if (!res.success) return toast.error(res.message);
     toast.success(res.message);
-    localStorage.removeItem("userId");
-    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("accessToken");
     setUser(null);
     navigate("/login");
   };

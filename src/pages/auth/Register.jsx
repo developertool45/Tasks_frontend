@@ -16,6 +16,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
+    if (user) return navigate("/");
     e.preventDefault();
     setError("");
     setMessage("");

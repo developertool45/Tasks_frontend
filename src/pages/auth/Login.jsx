@@ -20,16 +20,26 @@ const Login = () => {
     setSuccessMsg("");
     if (!email || !password) return setError("Please enter email and password");
     try {
-      const res = await apiClient.login(email, password);
+      const options = {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      };
+      const res = await apiClient.login(email, password, options);
       if (res.statusCode === 200) {
         setSuccessMsg(res.message);
         toast.success(res.message);
         setUser(res.data);
         refreshUser();
         // Save in localStorage
-        localStorage.setItem("userId", JSON.stringify(res.data.id));
-        localStorage.setItem("token", JSON.stringify(res.data.token));
-
+        localStorage.setItem(
+          "accessToken",
+          JSON.stringify(res.data.accessToken)
+        );
+        localStorage.setItem(
+          "refreshToken",
+          JSON.stringify(res.data.refreshToken)
+        );
         navigate("/all-projects");
       }
     } catch (error) {

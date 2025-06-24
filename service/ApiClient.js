@@ -1,7 +1,7 @@
 
 class ApiClient{
 	constructor() {
-		this.baseUrl = 'http://localhost:8000/api/';
+		this.baseUrl = 'http://localhost:8000/api/' || import.meta.env.VITE_API_URL;
 		this.defaultHeaders = {
 			'Content-Type': 'application/json',
 			'Accept': 'application/json',
@@ -22,9 +22,7 @@ class ApiClient{
 
 			if (!response.ok) {
 				// error object
-				throw Error(data.message);
-				// if (response.status === 400) {					
-				// }					
+				throw Error(data.message);								
 			}			
 			return data;
 		} catch (error) {
@@ -49,7 +47,7 @@ class ApiClient{
 			method: "POST",
 			body: JSON.stringify({email, password})
 		})
-	}
+	}	
 	async verifyEmailResend(email) {
 		return this.customFetch('v1/users/verify-email-resend', {
 			method: "POST",
@@ -81,6 +79,11 @@ class ApiClient{
 	}
 	async getProfile() {
 		return this.customFetch('v1/users/get-profile', {
+			method: "post",
+		})
+	}
+	async refreshAccessToken() {
+		return this.customFetch('v1/users/refresh-token', {
 			method: "post",
 		})
 	}
