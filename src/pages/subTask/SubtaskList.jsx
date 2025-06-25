@@ -30,7 +30,7 @@ const SubtaskList = () => {
 
   useEffect(() => {
     fetchSubtasks();
-  }, [taskId]);
+  }, [projectId, taskId]);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -47,26 +47,32 @@ const SubtaskList = () => {
           ...formData,
           status: formData.status === "true",
         });
+        if (!res.success) {
+          toast.error(res.message);
+          return setMessage({ text: res.message, type: "error" });
+        }
+        setSubtasks((prev) =>
+          prev.map((st) => (st._id === editId ? res.data : st))
+        );
       } else {
         res = await apiClient.createSubTask(projectId, taskId, {
           ...formData,
           status: formData.status === "true",
         });
+        if (!res.success) {
+          toast.error(res.message);
+          return setMessage({ text: res.message, type: "error" });
+        }
+        setSubtasks((prev) => [...prev, res.data]);
       }
       toast.success(res.message);
-      if (!res.success) {
-        toast.error(res.message);
-        return setMessage({ text: res.message, type: "error" });
-      }
       setMessage({
         text: editMode ? "Subtask updated!" : "Subtask created!",
         type: "success",
       });
-
       setFormData({ title: "", status: "false", remark: "" });
       setEditMode(false);
       setEditId(null);
-      fetchSubtasks();
     } catch (err) {
       setMessage({ text: err.message, type: "error" });
       toast.error(err.message);
@@ -78,7 +84,7 @@ const SubtaskList = () => {
     setEditId(subtask._id);
     setFormData({
       title: subtask.title,
-      status: subtask.status,
+      status: subtask.status ? "true" : "false",
       remark: subtask.remark,
     });
   };
@@ -91,8 +97,8 @@ const SubtaskList = () => {
           toast.error(res.message);
           return setMessage({ text: res.message, type: "error" });
         }
+        setSubtasks((prev) => prev.filter((st) => st._id !== id));
         setMessage({ text: "Subtask deleted!", type: "success" });
-        fetchSubtasks();
         toast.success(res.message);
       })
       .catch((err) => {
@@ -196,12 +202,10 @@ const SubtaskList = () => {
                     Status :
                     <span
                       className={`ml-1 font-medium text-md ${
-                        subtask.status === true
-                          ? "text-green-600"
-                          : "text-red-600"
+                        subtask.isCompleted ? "text-green-600" : "text-red-600"
                       }`}
                     >
-                      {subtask.status ? "Done" : "Pending"}
+                      {subtask.isCompleted ? "Done" : "Pending"}
                     </span>
                   </p>
                   <p className="text-sm text-gray-500">

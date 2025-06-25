@@ -38,6 +38,8 @@ import ViewTask from "./pages/tasks/ViewTask.jsx";
 import SubtaskList from "./pages/subTask/SubtaskList.jsx";
 import TaskSummary from "./pages/tasks/TaskSummary.jsx";
 import ProjectReport from "./pages/Projects/ProjectReport.jsx";
+import AdminRoute from "./pages/members/AdminRoute.jsx";
+import AppMembers from "./pages/members/AppMembers.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -45,6 +47,9 @@ function App() {
         <Layout>
           <ErrorBoundary>
             <Routes>
+              <Route element={<AdminRoute />}>
+                <Route path="app/members" element={<AppMembers />} />
+              </Route>
               <Route path="/" element={<Home />} />
               // auth route
               <Route element={<PublicRoute />}>

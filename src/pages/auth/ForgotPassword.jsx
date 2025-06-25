@@ -12,6 +12,8 @@ const ForgotPassword = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccessMsg("");
     if (!email) return setError("Please enter an email ");
     try {
       const res = await apiClient.forgotPassword(email);

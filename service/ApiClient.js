@@ -110,6 +110,26 @@ class ApiClient{
 			body: JSON.stringify(data)
 		})
 	}
+	async getAllUsers() {
+		return this.customFetch('v1/users/all-users', {
+			method: "get",
+		})
+	}
+	async promoteToAdmin(id) {
+		return this.customFetch(`v1/users/promote-to-admin/${id}`, {
+			method: "post",			
+		})
+	}
+	async promoteUser(id) {
+		return this.customFetch(`v1/users/promote-to-user/${id}`, {
+			method: "post",			
+		})
+	}
+	async removeMember(id) {
+		return this.customFetch(`v1/users/demote-user/${id}`, {
+			method: "post",			
+		})
+	}
 	// projects endpoints
 	async getAllProjects() {
 		return this.customFetch('v1/projects/all-projects', {

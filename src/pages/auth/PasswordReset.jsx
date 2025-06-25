@@ -15,7 +15,7 @@ const PasswordReset = () => {
   const [successMsg, setSuccessMsg] = useState("");
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(null);
+    setError("");
     setSuccessMsg("");
     if (!password || !confirmPassword)
       return setError("all fields are required !");

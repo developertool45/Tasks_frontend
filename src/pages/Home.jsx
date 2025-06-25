@@ -84,6 +84,20 @@ const Home = () => {
               Create Project
             </button>
           </div>
+          <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
+            <h2 className="text-xl font-semibold text-teal-600 mb-2">
+              👥 Team Members
+            </h2>
+            <p className="text-gray-600 mb-4">
+              See every registered user and manage their roles.
+            </p>
+            <button
+              onClick={() => navigate("app/members")} // add this route in your router
+              className="bg-teal-500 text-white px-4 py-2 rounded"
+            >
+              View Members
+            </button>
+          </div>
         </div>
       )}
     </div>
