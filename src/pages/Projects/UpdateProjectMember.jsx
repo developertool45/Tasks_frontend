@@ -84,7 +84,7 @@ const UpdateProjectMember = () => {
           >
             <div>
               <p className="font-semibold text-gray-800">{member.user.fname}</p>
-              <p className="text-sm text-gray-500">{member.user.email}</p>
+              {/* <p className="text-sm text-gray-500">{member.user.email}</p> */}
               <p className="text-sm text-gray-500">{member.role}</p>
             </div>
 

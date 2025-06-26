@@ -40,6 +40,7 @@ import TaskSummary from "./pages/tasks/TaskSummary.jsx";
 import ProjectReport from "./pages/Projects/ProjectReport.jsx";
 import AdminRoute from "./pages/members/AdminRoute.jsx";
 import AppMembers from "./pages/members/AppMembers.jsx";
+import ViewNotes from "./pages/Notes/ViewNotes.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -80,6 +81,11 @@ function App() {
                 <Route
                   path="/tasks/:projectId/:taskId/subtasks"
                   element={<SubtaskList />}
+                />
+                // notes route
+                <Route
+                  path="/projects/:projectId/notes"
+                  element={<ViewNotes />}
                 />
                 <Route element={<ProjectAdmin />}>
                   {/* <Route path="/create-project" element={<CreateProject />} /> */}

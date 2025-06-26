@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import CreateProject from "./CreateProject";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/Context";
-
+import { FileText, Eye, Pencil, Trash2 } from "lucide-react";
 const AllProjects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -53,7 +53,7 @@ const AllProjects = () => {
 
         <div className="md:col-span-2">
           <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
-            📋 All Projects
+            All Projects
           </h2>
 
           {projects.length === 0 ? (
@@ -75,11 +75,11 @@ const AllProjects = () => {
                       <span>{index + 1}. </span>
                       {project.name || project.project.name}
                     </h3>
-                    <p className="text-gray-600 mt-1 text-sm sm:text-base">
+                    <p className="ps-4 text-gray-500 mt-1 text-sm sm:text-base">
                       {project.description || project.project.description}
                     </p>
 
-                    <div className="text-xs sm:text-sm text-gray-500 mt-2">
+                    <div className="text-xs sm:text-sm text-gray-500 mt-2 ps-4">
                       {user?.role === "member"
                         ? "Assigned To: "
                         : "Created By: "}
@@ -96,26 +96,43 @@ const AllProjects = () => {
                       )}
                     </div>
                   </div>
+                  <div className="w-full sm:w-1/2 lg:w-1/4 flex justify-center items-center mt-6">
+                    {/* two-by-two grid on every screen; width auto-adapts */}
+                    <div className="grid grid-cols-2 gap-4 w-full max-w-xs">
+                      {/* ───────── 1. Notes ───────── */}
+                      <button
+                        onClick={() =>
+                          navigate(`/projects/${project.project._id}/notes`)
+                        }
+                        className="flex items-center justify-center gap-1 bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded text-sm w-full"
+                      >
+                        <FileText size={16} /> Notes
+                      </button>
 
-                  <div className="mt-4 sm:mt-0 sm:w-1/4 flex sm:flex-col gap-2 justify-end">
-                    <Link
-                      to={`/projects/${project.project._id}`}
-                      className="bg-blue-200 hover:bg-blue-300 px-3 py-1 rounded text-center"
-                    >
-                      View
-                    </Link>
-                    <Link
-                      to={`/projects/${project.project._id}/edit`}
-                      className="bg-orange-200 hover:bg-orange-300 px-3 py-1 rounded text-center"
-                    >
-                      Edit
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(project.project._id)}
-                      className="bg-red-200 hover:bg-red-300 px-3 py-1 rounded text-center"
-                    >
-                      Delete
-                    </button>
+                      {/* ───────── 2. View ───────── */}
+                      <Link
+                        to={`/projects/${project.project._id}`}
+                        className="flex items-center justify-center gap-1 bg-blue-200 hover:bg-blue-300 px-4 py-2 rounded text-sm w-full"
+                      >
+                        <Eye size={16} /> View
+                      </Link>
+
+                      {/* ───────── 3. Edit ───────── */}
+                      <Link
+                        to={`/projects/${project.project._id}/edit`}
+                        className="flex items-center justify-center gap-1 bg-orange-200 hover:bg-orange-300 px-4 py-2 rounded text-sm w-full"
+                      >
+                        <Pencil size={16} /> Edit
+                      </Link>
+
+                      {/* ───────── 4. Delete ───────── */}
+                      <button
+                        onClick={() => handleDelete(project.project._id)}
+                        className="flex items-center justify-center gap-1 bg-red-200 hover:bg-red-300 px-4 py-2 rounded text-sm w-full"
+                      >
+                        <Trash2 size={16} /> Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}

@@ -251,6 +251,30 @@ class ApiClient{
 		})
 	}
 
+	// notes
+	async getAllNotes(id) {
+		return this.customFetch(`v1/notes/notes/${id}`, {
+			method: "get",
+		})
+	}
+	async createNote(projectId, data) {
+		return this.customFetch(`v1/notes/create-note/${projectId}`, {
+			method: "post",
+			body: JSON.stringify(data)
+		})
+	}
+	async updateNote(id, noteId, data) {
+		return this.customFetch(`v1/notes/update-note/${id}/${noteId}`, {
+			method: "post",
+			body: JSON.stringify(data)
+		})
+	}
+	async deleteNote(id, noteId) {
+		return this.customFetch(`v1/notes/delete-note/${id}/${noteId}`, {
+			method: "post",
+		})
+	}
+
 }
 
 const apiClient = new ApiClient();

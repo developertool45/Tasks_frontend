@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import apiClient from "../../../service/ApiClient";
 import { useAuth } from "../../context/Context";
 import { toast } from "react-toastify";
+import { Pencil, Lock } from "lucide-react";
 function Profile() {
   const { user, setUser } = useAuth();
   const [editMode, setEditMode] = useState(false);
@@ -107,7 +108,6 @@ function Profile() {
       toast.error(err.message || "Something went wrong during upload");
     }
   };
-  
 
   return (
     <div className="max-w-6xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
@@ -154,18 +154,18 @@ function Profile() {
                   setEditMode(true);
                   setPasswordMode(false);
                 }}
-                className="bg-gray-700 text-white px-4 py-2 rounded"
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-300 ease-in-out flex items-center gap-1 text-sm"
               >
-                ✏️ Edit Profile
+                <Pencil size={16} /> Edit Profile
               </button>
               <button
                 onClick={() => {
                   setPasswordMode(true);
                   setEditMode(false);
                 }}
-                className="bg-orange-600 text-white px-4 py-2 rounded"
+                className="bg-orange-400 text-white px-4 py-2 rounded hover:bg-orange-500 transition duration-300 ease-in-out flex items-center gap-1 text-sm"
               >
-                🔒 Change Password
+                <Lock size={16} /> Change Password
               </button>
             </div>
           </div>
