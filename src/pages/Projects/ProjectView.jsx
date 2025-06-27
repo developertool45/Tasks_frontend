@@ -136,12 +136,12 @@ const ViewProject = () => {
               <ChartNoAxesColumn size={16} /> Task Summary
             </button>
           </Link>
-          <button
-            onClick={() => navigate(-1)}
+          <Link
+            to={`/all-projects`}
             className=" w-fit text-sm  bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md"
           >
             Go Back
-          </button>
+          </Link>
         </div>
       </div>
     </div>

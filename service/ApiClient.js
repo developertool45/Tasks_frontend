@@ -153,8 +153,8 @@ class ApiClient{
 			body: JSON.stringify({name, description, status,dueDate})
 		})
 	}
-	async deleteProject(id) {
-		return this.customFetch(`v1/projects/delete-project/${id}`, {
+	async deleteProject(projectId) {
+		return this.customFetch(`v1/projects/delete-project/${projectId}`, {
 			method: "post",
 		})
 	}
