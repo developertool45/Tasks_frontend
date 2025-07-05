@@ -1,7 +1,7 @@
 
 class ApiClient{
 	constructor() {
-		this.baseUrl = 'http://localhost:8000/api/' || import.meta.env.VITE_API_URL;
+		this.baseUrl =import.meta.env.VITE_API_URL || 'http://localhost:8000/api/';
 		this.defaultHeaders = {
 			'Content-Type': 'application/json',
 			'Accept': 'application/json',
