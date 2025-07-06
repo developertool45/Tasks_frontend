@@ -4,9 +4,10 @@ class ApiClient{
 		this.baseUrl =
       `${import.meta.env.VITE_API_URL}/api/` || "http://localhost:8000/api/";
 		this.defaultHeaders = {
-			'Content-Type': 'application/json',
-			'Accept': 'application/json',
-		}		
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    };		
 	}
 	async customFetch( endpoints, options= {}) {
 		try {
