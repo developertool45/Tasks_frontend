@@ -5,17 +5,29 @@ import { toast } from "react-toastify";
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000/api/",
   withCredentials: true, // send cookies for refresh‑token
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-  },
   timeout: 8000, // 8s request‑level timeout
 });
 
 // 🔄 Interceptor: attach access‑token if present
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  const accessToken = localStorage.getItem("accessToken");
+  if (!accessToken) {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (refreshToken) {
+      api
+        .post("v1/users/refresh-token", { refreshToken })
+        .then(({ data }) => {
+          localStorage.setItem("accessToken", data.accessToken);
+          localStorage.setItem("refreshToken", data.refreshToken);
+          config.headers.Authorization = `Bearer ${data.accessToken}`;
+        })
+        .catch(() => {
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("accessToken");
+        });
+    }
+  }
+  if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
   return config;
 });
 
