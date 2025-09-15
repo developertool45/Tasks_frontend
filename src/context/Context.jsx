@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
 
       const res = await apiClient.getUser();
 
-      if (!res.success && res.statusCode === 401) {
+      if (!res.success && res.status === 401) {
         console.log("Access token expired, trying refresh...");
         const refreshRes = await apiClient.refreshAccessToken();
 
