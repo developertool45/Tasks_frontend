@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Auth fetch error", error);
-      toast.error(error.message);
+      if (error.message === "jwt malformed") toast.error("Please login again");
       setUser(null);
     } finally {
       setLoading(false);
