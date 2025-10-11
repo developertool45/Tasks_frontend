@@ -164,7 +164,7 @@ const ProjectTasks = () => {
               >
                 <div className="flex flex-col sm:flex-row justify-between gap-6">
                   {/* LEFT - Task Info */}
-                  <div className="flex-1">
+                  <div className="flex flex-col">
                     <h3 className="text-xl font-semibold text-blue-600 mb-1">
                       {index + 1}. {task.title}
                     </h3>
@@ -192,17 +192,15 @@ const ProjectTasks = () => {
                       </span>
                     </p>
                     <div className="w-fit bg-gray-50 border rounded p-3 text-sm text-gray-600">
-                      <p>
-                        📅 Created: {new Date(task.createdAt).toLocaleString()}
-                      </p>
+                      <p>📅 {new Date(task.createdAt).toLocaleString()}</p>
                       <p className="mt-2">
-                        🕒 Updated: {new Date(task.updatedAt).toLocaleString()}
+                        🕒 {new Date(task.updatedAt).toLocaleString()}
                       </p>
                     </div>
                   </div>
 
                   {/* RIGHT - Action Buttons */}
-                  <div className="flex sm:flex-col gap-2 w-full sm:w-40">
+                  <div className="flex sm:flex-col gap-2 sm:gap-1 flex-wrap w-full sm:w-40">
                     <Link
                       to={`/tasks/${projectId}/${task._id}`}
                       className="bg-blue-500 hover:bg-blue-600 text-white text-sm py-2 px-3 rounded flex justify-center items-center gap-1"

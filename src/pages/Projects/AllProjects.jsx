@@ -24,7 +24,7 @@ const AllProjects = () => {
         setLoading(false);
       })
       .finally(() => setLoading(false));
-  }, [refresh]);
+  }, [projects]);
 
   const handleDelete = async (id) => {
     try {
@@ -56,7 +56,7 @@ const AllProjects = () => {
             All Projects
           </h2>
 
-          {projects.length === 0 ? (
+          {projects.length < 0 ? (
             <div className="text-gray-500">
               <p>No projects found.</p>
               <p className="text-blue-600 mt-2 cursor-pointer">

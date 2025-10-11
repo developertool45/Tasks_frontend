@@ -134,7 +134,7 @@ function App() {
       </AuthProvider>
       <ToastContainer
         position="bottom-left"
-        autoClose={3000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={true}
         closeOnClick

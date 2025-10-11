@@ -10,16 +10,6 @@ export default function Header() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
-    if (!user) {
-      apiClient.getProfile().then((res) => {
-        if (res.success) {
-          setUser(res.data);
-        }
-      });
-    }
-  }, []);
-
   const handleLogout = async () => {
     const res = await apiClient.logout();
     if (!res.success) return toast.error(res.message);

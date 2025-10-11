@@ -7,57 +7,48 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [refresh, setRefresh] = useState(false);
 
   const fetchUser = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-
       const res = await apiClient.getUser();
-
-      if (!res.success && res.status === 401) {
-        console.log("Access token expired, trying refresh...");
-        const refreshRes = await apiClient.refreshAccessToken();
-
-        if (refreshRes.success && refreshRes.data) {
-          setUser(refreshRes.data);
-          setRefresh((prev) => !prev); // trigger another fetch if needed
-          return;
-        } else {
-          setUser(null);
-          return;
-        }
+      if (res.success) {
+        return setUser(res.data);
       }
 
-      if (res.success && res.data) {
-        setUser(res.data);
-      } else {
-        setUser(null);
+      if (res.statusCode === 401 && res.success === false) {
+        const refreshToken = await apiClient.refreshAccessToken();
+        if (refreshToken.success) {
+          fetchUser();
+        } else {
+          toast.error(res.message);
+          setUser(null);
+        }
       }
     } catch (error) {
       console.error("Auth fetch error", error);
-      if (error.message === "jwt malformed") toast.error("Please login again");
+      toast.error(error.message);
       setUser(null);
     } finally {
       setLoading(false);
     }
   };
 
-  // Initial fetch
   useEffect(() => {
-    fetchUser();
-  }, [refresh]);
+    const loadUser = async () => {
+      await fetchUser();
+    };
+    loadUser();
+  }, []);
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, loading, refreshUser: fetchUser, setRefresh }}
+      value={{ user, setUser, loading, refreshUser: fetchUser,}}
     >
       {children}
     </AuthContext.Provider>
   );
 };
 
+export const useAuth = () => useContext(AuthContext);
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};

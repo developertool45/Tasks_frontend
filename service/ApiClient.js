@@ -1,12 +1,11 @@
 class ApiClient{
 	constructor() {
-		this.baseUrl =
-      `${import.meta.env.VITE_API_URL}/api/` || "http://localhost:8000/api/";
+		this.baseUrl =(import.meta.env.VITE_API_URL + '/api/') || "http://localhost:8000/api/";
 		this.defaultHeaders = {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-    };		
+			"Content-Type": "application/json",
+			Accept: "application/json",
+			Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    	};		
 	}
 	async customFetch( endpoints, options= {}) {
 		try {
@@ -18,17 +17,29 @@ class ApiClient{
 			}
 			// console.log(`fetching Url : ${url}`)
 
-			const response = await fetch(url, config);
-			const data = await response.json();
-
-			if (!response.ok) {
-				// error object
-				throw Error(data.message);								
-			}			
+			const response = await fetch(url, config);			
+			const data = await response.json().catch(() => ({}));
+			 if (!response.ok) {
+				// Return both error message and status for handling
+				return {
+					success: false,
+					statusCode: response.status,
+					message: data?.message || 'Request failed, please try again',
+					data: null,
+					login:response.status < 401
+				};
+			}	
+			// console.log('response',data);			
 			return data;
 		} catch (error) {
-			console.log("fetch error", error);			
-			throw Error(error.message);
+			console.log("Error in ApiClient", error);	
+			
+			return {
+				success: false,
+				statusCode: response.status,
+				message: error.message,
+				data: null,
+			}
 		}
 	}
 

@@ -20,30 +20,21 @@ const Login = () => {
     setSuccessMsg("");
     if (!email || !password) return setError("Please enter email and password");
     try {
-      const options = {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("accessToken"),
-        },
-      };
-      const res = await apiClient.login(email, password, options);
+      const res = await apiClient.login(email, password);
       if (res.statusCode === 200) {
         setSuccessMsg(res.message);
         toast.success(res.message);
         setUser(res.data);
-        refreshUser();
         // Save in localStorage
         localStorage.setItem(
           "accessToken",
           JSON.stringify(res.data.accessToken)
         );
-        localStorage.setItem(
-          "refreshToken",
-          JSON.stringify(res.data.refreshToken)
-        );
+
+        refreshUser();
         navigate("/all-projects");
       }
     } catch (error) {
-      console.log(error);
       setError(error.message);
       toast.error(error.message);
       setUser(null);
