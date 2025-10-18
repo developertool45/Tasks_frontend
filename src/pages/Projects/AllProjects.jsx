@@ -24,7 +24,7 @@ const AllProjects = () => {
         setLoading(false);
       })
       .finally(() => setLoading(false));
-  }, [projects]);
+  }, [refresh]);
 
   const handleDelete = async (id) => {
     try {
