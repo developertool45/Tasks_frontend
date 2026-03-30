@@ -1,294 +1,106 @@
-class ApiClient{
-	constructor() {
-		this.baseUrl =(import.meta.env.VITE_API_URL + '/api/') || "http://localhost:8000/api/";
-		this.defaultHeaders = {
-			"Content-Type": "application/json",
-			Accept: "application/json",
-			Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-    	};		
-	}
-	async customFetch( endpoints, options= {}) {
-		try {
-			const url = `${this.baseUrl}${endpoints}`;
-			const headers = { ...this.defaultHeaders, ...options.headers }
-			const config = {
-				...options, headers,
-				credentials: 'include'
-			}
-			// console.log(`fetching Url : ${url}`)
+import axios from "axios";
+import { toast } from "react-toastify";
 
-			const response = await fetch(url, config);			
-			const data = await response.json().catch(() => ({}));
-			 if (!response.ok) {
-				// Return both error message and status for handling
-				return {
-					success: false,
-					statusCode: response.status,
-					message: data?.message || 'Request failed, please try again',
-					data: null,
-					login:response.status < 401
-				};
-			}	
-			// console.log('response',data);			
-			return data;
-		} catch (error) {
-			console.log("Error in ApiClient", error);	
-			
-			return {
-				success: false,
-				statusCode: response.status,
-				message: error.message,
-				data: null,
-			}
-		}
-	}
+// 👉 Roles: create a single axios instance with defaults & interceptors
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000/api/",
+  withCredentials: true, // send cookies for refresh‑token
+  timeout: 8000, // 8s request‑level timeout
+});
 
-	async getUser() {
-		return this.customFetch('v1/users/get-profile', {
-			method: "POST",
-		})
-	}
-	async signup(fname, email, password,username) {
-		return this.customFetch('v1/users/register', {
-			method: "POST",
-			body: JSON.stringify({ fname, email, password ,username})
-		})
-	}
-	async login(email, password) {
-		return this.customFetch('v1/users/login', {
-			method: "POST",
-			body: JSON.stringify({email, password})
-		})
-	}	
-	async verifyEmailResend(email) {
-		return this.customFetch('v1/users/verify-email-resend', {
-			method: "POST",
-			body: JSON.stringify({email})
-		})
-	}
-	async verifyUser(token) {
-		return this.customFetch(`v1/users/verify-email/?token=${token}`, {
-			method: "get",			
-		})
-	}
-	async forgotPassword(email) {
-		return this.customFetch('v1/users/forgot-password', {
-			method: "POST",
-			body: JSON.stringify({email})
-		})
-	}
-	async resetPassword(token, password) {
-		return this.customFetch('v1/users/reset-password', {
-			method: "POST",
-			body: JSON.stringify({token, password})
-		})
-	}
-	async verifyEmail(token) {
-		return this.customFetch('v1/users/verify-email', {
-			method: "POST",
-			body: JSON.stringify({token})
-		})
-	}
-	async getProfile() {
-		return this.customFetch('v1/users/get-profile', {
-			method: "post",
-		})
-	}
-	async refreshAccessToken() {
-		return this.customFetch('v1/users/refresh-token', {
-			method: "post",
-		})
-	}
-	async updateProfile(id,data) {
-		return this.customFetch('v1/users/update-profile', {
-			method: "post",
-			body: JSON.stringify(data)
-		})
-	}
-	async uploadAvatar(id, formData) {
-		return this.customFetch(`v1/users/upload-avatar/${id}`, {
-			method: "post",
-			body: formData,			
-		})
-	}
-	async logout() {
-		return this.customFetch('v1/users/logout', {
-			method: "get",
-		})
-	}
-	async changePassword(data) {
-		return this.customFetch('v1/users/change-password', {
-			method: "post",
-			body: JSON.stringify(data)
-		})
-	}
-	async getAllUsers() {
-		return this.customFetch('v1/users/all-users', {
-			method: "get",
-		})
-	}
-	async promoteToAdmin(id) {
-		return this.customFetch(`v1/users/promote-to-admin/${id}`, {
-			method: "post",			
-		})
-	}
-	async promoteUser(id) {
-		return this.customFetch(`v1/users/promote-to-user/${id}`, {
-			method: "post",			
-		})
-	}
-	async removeMember(id) {
-		return this.customFetch(`v1/users/demote-user/${id}`, {
-			method: "post",			
-		})
-	}
-	// projects endpoints
-	async getAllProjects() {
-		return this.customFetch('v1/projects/all-projects', {
-			method: "get",
-		})
-	}
-	async createProject(name, description, date) {
-		return this.customFetch('v1/projects/new-project', {
-			method: "post",
-			body: JSON.stringify({name, description, date})
-		})
-	}
-	async getProject(id) {
-		return this.customFetch(`v1/projects/get-project/${id}`, {
-			method: "get",
-		})
-	}
-	async updateProject(id, name, description, status,dueDate) {
-		return this.customFetch(`v1/projects/update-project/${id}`, {
-			method: "post",
-			body: JSON.stringify({name, description, status,dueDate})
-		})
-	}
-	async deleteProject(projectId) {
-		return this.customFetch(`v1/projects/delete-project/${projectId}`, {
-			method: "post",
-		})
-	}
-	async addMembertoProject(id, email) {
-		return this.customFetch(`v1/projects/add-project-member/${id}`, {
-			method: "post",
-			body: JSON.stringify({email})
-		})
-	}
-	async getProjectMembers(id) {
-		return this.customFetch(`v1/projects/project-members/${id}`, {
-			method: "post",
-		})
-	}
-	async updateProjectMembers(id, email) {
-		return this.customFetch(`v1/projects/update-project-members/${id}`, {
-			method: "post",
-			body: JSON.stringify({email})
-		})
-	}
-	async updateMemberRole(projectId, memberId, role) {
-		return this.customFetch(`v1/projects/update-member-role/${projectId}/${memberId}`, {	
-			method: "post",
-			body: JSON.stringify({role})
-		})
-	}
-	async deleteMember(id, memberId, email) {
-		return this.customFetch(`v1/projects/delete-member/${id}/${memberId}`, {
-			method: "post",
-			body: JSON.stringify({email})
-		})
-	}
-	// tasks endpoints
-	async getProjectTasks(projectId) {
-		return this.customFetch(`v1/tasks/project-tasks/${projectId}`, {
-			method: "get",
-		})
-	}
-	async createTask({ title, description, assignedTo, status, projectId }) {
-		return this.customFetch(`v1/tasks/create-task/${projectId}`, {
-			method: "post",
-			body: JSON.stringify({title, description, assignedTo, status})
-		})
-	}
-	async getTask(projectId, taskId) {
-		return this.customFetch(`v1/tasks/get-task/${projectId}/${taskId}`, {
-			method: "get",
-		})
-	}
-	async updateTask(projectId, id, { title, description, assignedTo, status }) {
-		return this.customFetch(`v1/tasks/update-task/${projectId}/${id}`, {
-			method: "post",
-			body: JSON.stringify({title, description, assignedTo, status})
-		})
-	}
-	async deleteTask( projectId,id) {
-		return this.customFetch(`v1/tasks/delete-task/${projectId}/${id}`, {
-			method: "post",
-		})
-	}
-	async assignTask(projectId, taskId, email) {
-		return this.customFetch(`v1/tasks/assign-task/${projectId}/${taskId}`, {
-			method: "post",
-			body: JSON.stringify({email})
-		})
-	}
-	async getSubTasks(projectId,taskId) {
-		return this.customFetch(`v1/subtasks/all-subtasks/${projectId}/${taskId}`, {
-			method: "get",
-		})
-	}
-	async createSubTask(projectId, taskId, { title, isCompleted, remark = null }) {
-		return this.customFetch(`v1/subtasks/create-subtask/${projectId}/${taskId}`, {
-			method: "post",
-			body: JSON.stringify({title, isCompleted, remark})
-		})
-	}
-	async updateSubTask(projectId, taskId, id, { title, status: isCompleted, remark = null }) {
-		return this.customFetch(`v1/subtasks/update-subtask/${projectId}/${taskId}/${id}`, {
-			method: "post",
-			body: JSON.stringify({title, isCompleted, remark})
-		})
-	}
-	async deleteSubTask(projectId, taskId, id) {
-		return this.customFetch(`v1/subtasks/delete-subtask/${projectId}/${taskId}/${id}`, {
-			method: "post",
-		})
-	}
+// 🔄 Interceptor: attach access‑token if present
+api.interceptors.request.use((config) => {
+  const accessToken = localStorage.getItem("accessToken");
+  if (!accessToken) {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (refreshToken) {
+      api
+        .post("v1/users/refresh-token", { refreshToken })
+        .then(({ data }) => {
+          localStorage.setItem("accessToken", data.accessToken);
+          localStorage.setItem("refreshToken", data.refreshToken);
+          config.headers.Authorization = `Bearer ${data.accessToken}`;
+        })
+        .catch(() => {
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("accessToken");
+        });
+    }
+  }
+  if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+  return config;
+});
 
-	// all projects With tasks
-	async getAllProjectsWithTasks() {
-		return this.customFetch('v1/projects/all-projects-with-tasks', {
-			method: "get",
-		})
-	}
+// ⚠️ Global error handler
+api.interceptors.response.use(
+  (res) => res.data,
+  (err) => {
+    if (err.code === "ECONNABORTED") {
+      toast.error("Request timeout. Try again.");
+    } else if (err.response && err.response.data?.message) {
+      toast.error(err.response.data.message);
+    } else {
+      toast.error("Network error");
+    }
+    return Promise.reject(err);
+  }
+);
 
-	// notes
-	async getAllNotes(id) {
-		return this.customFetch(`v1/notes/notes/${id}`, {
-			method: "get",
-		})
-	}
-	async createNote(projectId, data) {
-		return this.customFetch(`v1/notes/create-note/${projectId}`, {
-			method: "post",
-			body: JSON.stringify(data)
-		})
-	}
-	async updateNote(id, noteId, data) {
-		return this.customFetch(`v1/notes/update-note/${id}/${noteId}`, {
-			method: "post",
-			body: JSON.stringify(data)
-		})
-	}
-	async deleteNote(id, noteId) {
-		return this.customFetch(`v1/notes/delete-note/${id}/${noteId}`, {
-			method: "post",
-		})
-	}
+// 🔧 Helper methods
+const get = (url, cfg = {}) => api.get(url, cfg);
+const post = (url, data = {}, cfg = {}) => api.post(url, data, cfg);
+const patch = (url, data = {}, cfg = {}) => api.patch(url, data, cfg);
 
+class ApiClient {
+  // ===== Auth =====
+  getUser = () => post("v1/users/get-profile");
+  signup = (payload) => post("v1/users/register", payload);
+  login = (payload) => post("v1/users/login", payload);
+  verifyEmailResend = (email) => post("v1/users/verify-email-resend", { email });
+  verifyUser = (token) => get(`v1/users/verify-email/?token=${token}`);
+  forgotPassword = (email) => post("v1/users/forgot-password", { email });
+  resetPassword = (token, password) => post("v1/users/reset-password", { token, password });
+  verifyEmail = (token) => post("v1/users/verify-email", { token });
+  getProfile = () => post("v1/users/get-profile");
+  refreshAccessToken = () => post("v1/users/refresh-token");
+  updateProfile = (data) => post("v1/users/update-profile", data);
+  uploadAvatar = (id, formData) =>
+    post(`v1/users/upload-avatar/${id}`, formData, { headers: { "Content-Type": "multipart/form-data" } });
+  logout = () => get("v1/users/logout");
+  changePassword = (data) => post("v1/users/change-password", data);
+
+  // ===== Projects =====
+  getAllProjects = () => get("v1/projects/all-projects");
+  createProject = (payload) => post("v1/projects/new-project", payload);
+  getProject = (id) => get(`v1/projects/get-project/${id}`);
+  updateProject = (id, payload) => post(`v1/projects/update-project/${id}`, payload);
+  deleteProject = (id) => post(`v1/projects/delete-project/${id}`);
+  addMembertoProject = (id, email) => post(`v1/projects/add-project-member/${id}`, { email });
+  getProjectMembers = (id) => post(`v1/projects/project-members/${id}`);
+  updateProjectMembers = (id, email) => post(`v1/projects/update-project-members/${id}`, { email });
+  updateMemberRole = (projectId, memberId, role) => post(`v1/projects/update-member-role/${projectId}/${memberId}`, { role });
+  deleteMember = (id, memberId, email) => post(`v1/projects/delete-member/${id}/${memberId}`, { email });
+  getAllProjectsWithTasks = () => get("v1/projects/all-projects-with-tasks");
+
+  // ===== Tasks =====
+  getProjectTasks = (projectId) => get(`v1/tasks/project-tasks/${projectId}`);
+  createTask = (projectId, payload) => post(`v1/tasks/create-task/${projectId}`, payload);
+  getTask = (projectId, taskId) => get(`v1/tasks/get-task/${projectId}/${taskId}`);
+  updateTask = (projectId, taskId, payload) => post(`v1/tasks/update-task/${projectId}/${taskId}`, payload);
+  deleteTask = (projectId, taskId) => post(`v1/tasks/delete-task/${projectId}/${taskId}`);
+  assignTask = (projectId, taskId, email) => post(`v1/tasks/assign-task/${projectId}/${taskId}`, { email });
+
+  // ===== Subtasks =====
+  getSubTasks = (projectId, taskId) => get(`v1/subtasks/all-subtasks/${projectId}/${taskId}`);
+  createSubTask = (projectId, taskId, payload) => post(`v1/subtasks/create-subtask/${projectId}/${taskId}`, payload);
+  updateSubTask = (projectId, taskId, id, payload) => post(`v1/subtasks/update-subtask/${projectId}/${taskId}/${id}`, payload);
+  deleteSubTask = (projectId, taskId, id) => post(`v1/subtasks/delete-subtask/${projectId}/${taskId}/${id}`);
+
+  // ===== Notes =====
+  getNotes = (projectId) => get(`v1/notes/${projectId}`);
+  createNote = (projectId, noteId, payload) => post(`v1/project-note/${projectId}/${noteId}`, payload);
+  updateNote = (projectId, noteId, payload) => patch(`v1/update-note/${projectId}/${noteId}`, payload);
+  deleteNote = (projectId, noteId) => post(`v1/delete-note/${projectId}/${noteId}`);
 }
 
-const apiClient = new ApiClient();
-
-export default apiClient;
+export default new ApiClient();
