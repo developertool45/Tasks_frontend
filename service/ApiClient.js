@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000/api/",
   withCredentials: true, // send cookies for refresh‑token
-  timeout: 8000, // 8s request‑level timeout
+  timeout: 20000, // 8s request‑level timeout
 });
 
 // 🔄 Interceptor: attach access‑token if present
