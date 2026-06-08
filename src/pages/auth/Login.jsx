@@ -28,10 +28,8 @@ const Login = () => {
         // Save in localStorage
         localStorage.setItem(
           "accessToken",
-          JSON.stringify(res.data.accessToken)
-        );
-
-        refreshUser();
+          JSON.stringify(res.data.accessToken),
+        );        
         navigate("/all-projects");
       }
     } catch (error) {
