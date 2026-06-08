@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import apiClient from "../../service/_ApiClient";
+import apiClient from "../../service/ApiClient";
 import { toast } from "react-toastify";
 
 const AuthContext = createContext(null);
@@ -11,6 +11,11 @@ export const AuthProvider = ({ children }) => {
   const fetchUser = async () => {
     setLoading(true);
     try {
+      if (user === null) {
+        throw new Error("Please login first.");
+        return;
+      }
+
       const res = await apiClient.getUser();
       if (res.success) {
         return setUser(res.data);
@@ -24,7 +29,6 @@ export const AuthProvider = ({ children }) => {
           toast.error(res.message);
           setUser(null);
           setLoading(false);
-          
         }
       }
     } catch (error) {
@@ -43,7 +47,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, loading, refreshUser: fetchUser,}}
+      value={{ user, setUser, loading, refreshUser: fetchUser }}
     >
       {children}
     </AuthContext.Provider>
