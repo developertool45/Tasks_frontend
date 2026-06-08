@@ -18,6 +18,8 @@ const Login = () => {
     e.preventDefault();
     setError(false);
     setSuccessMsg("");
+    console.log("========== checking email and password ==========");
+    console.log(email, password);
     if (!email || !password) return setError("Please enter email and password");
     try {
       const res = await apiClient.login(email, password);
