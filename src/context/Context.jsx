@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
       if (res.statusCode === 401 && res.success === false) {
         const refreshToken = await apiClient.refreshAccessToken();
         if (refreshToken.success) {
-          fetchUser();
+          await fetchUser();
         } else {
           toast.error(res.message);
           setUser(null);
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     fetchUser();
-  }, [user]);
+  }, []);
 
   return (
     <AuthContext.Provider

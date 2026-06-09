@@ -29,7 +29,8 @@ const Login = () => {
         localStorage.setItem(
           "accessToken",
           JSON.stringify(res.data.accessToken),
-        );        
+        );
+        await refreshUser();
         navigate("/all-projects");
       }
     } catch (error) {
