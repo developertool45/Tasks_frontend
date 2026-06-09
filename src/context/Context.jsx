@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import apiClient from "../../service/ApiClient";
-import { toast } from "react-toastify";
 
 const AuthContext = createContext(null);
 
@@ -8,46 +7,65 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchUser = async () => {
-    setLoading(true);
+  const refreshUser = async () => {
     try {
+      setLoading(true);
+
       const res = await apiClient.getUser();
-      if (res.success) {
-        return setUser(res.data);
+
+      if (res?.success) {
+        setUser(res.data);
+      } else {
+        setUser(null);
       }
 
-      if (res.statusCode === 401 && res.success === false) {
-        const refreshToken = await apiClient.refreshAccessToken();
-        if (refreshToken.success) {
-          await fetchUser();
-        } else {
-          toast.error(res.message);
-          setUser(null);
-          setLoading(false);
-        }
-      }
+      return res;
     } catch (error) {
-      console.error("Auth fetch error", error);
-      toast.error(error.message);
-      setLoading(false);
+      console.error("Fetch User Error:", error);
       setUser(null);
+
+      return {
+        success: false,
+        message: error.message,
+      };
     } finally {
       setLoading(false);
     }
   };
 
+  const logout = async () => {
+    try {
+      await apiClient.logout();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      localStorage.removeItem("accessToken");
+      setUser(null);
+    }
+  };
+
   useEffect(() => {
-    fetchUser();
+    refreshUser();
   }, []);
 
-  return (
-    <AuthContext.Provider
-      value={{ user, setUser, loading, refreshUser: fetchUser }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  const value = {
+    user,
+    setUser,
+    loading,
+    refreshUser,
+    logout,
+    isAuthenticated: !!user,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
 
+  if (!context) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
+
+  return context;
+};
