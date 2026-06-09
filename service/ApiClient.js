@@ -30,7 +30,7 @@ class ApiClient {
         console.log("Access token expired, refreshing...");
 
         const refreshResponse = await fetch(
-          `${this.baseUrl}/users/refresh-token`,
+          `${this.baseUrl}users/refresh-token`,
           {
             method: "POST",
             credentials: "include",
