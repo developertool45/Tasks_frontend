@@ -11,11 +11,6 @@ export const AuthProvider = ({ children }) => {
   const fetchUser = async () => {
     setLoading(true);
     try {
-      if (user === null) {
-        throw new Error("Please login first.");
-        return;
-      }
-
       const res = await apiClient.getUser();
       if (res.success) {
         return setUser(res.data);
